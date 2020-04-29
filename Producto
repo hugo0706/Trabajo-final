@@ -1,0 +1,90 @@
+import java.time.LocalDate;  
+public class Producto {
+    private LocalDate fechaPublicacion;    
+    private String categoria;     
+    private String estado;     //Nuevo, seminuevo, decente.....
+    private String descripcion;   
+    private String titulo;   //Resumen del producto con palabras clave
+    private double precio;       
+    private boolean venta;    //Booleano que indica si el producto ha sido vendido o no
+
+    public Producto(String titulo, String categoria, String estado, String descripcion, double precio) {
+        this.categoria = categoria;
+        this.estado = estado;
+        this.descripcion = descripcion;
+        this.titulo = titulo;
+        this.precio = precio;
+        this.venta = false;     //Siempre se inicia como falso
+        this.fechaPublicacion = LocalDate.now();        //Fecha de publicacion = momento en el que se crea el producto
+                
+    }
+    
+    
+    
+    public boolean isVenta() {
+        return venta;
+    }
+    
+    public boolean vendido(){
+        this.venta = true;
+        return venta;            
+    }
+
+    
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+
+    
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    
+    
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    
+    
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    
+    
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+    
+    
+    
+    public LocalDate getfechaPublicacion(){
+        return fechaPublicacion;
+    }
+
+    
+}
