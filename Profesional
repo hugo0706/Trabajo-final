@@ -1,6 +1,6 @@
 import java.time.LocalDateTime;
 
-public class Profesional extends Clientes{
+public class Profesional extends Cliente{
 	private String descripcion;
 	private int apertura;
 	private int cierre;
@@ -17,7 +17,7 @@ public class Profesional extends Clientes{
 		this.web = web;
 	}
 	//Constructor de Cliente Profesional a partir de Cliente existente
-	public Profesional(Clientes cliente,String descripcion, int apertura, int cierre, String telefono, String web) {
+	public Profesional(Cliente cliente,String descripcion, int apertura, int cierre, String telefono, String web) {
 		
 		this.dni=cliente.getDni();
 		this.nombre = cliente.getNombre();
@@ -33,10 +33,6 @@ public class Profesional extends Clientes{
 		this.web = web;
 	}
 	
-	public Profesional(String descripcion, int apertura, int cierre, String telefono, String web) {
-			
-		
-	}
 	@Override
 	public String toString() {
 		return super.toString()+"Profesional [descripcion=" + descripcion + ", apertura=" + apertura + ", cierre=" + cierre
