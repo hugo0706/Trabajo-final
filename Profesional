@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class Profesional extends Cliente{
 	private String descripcion;
@@ -6,7 +7,13 @@ public class Profesional extends Cliente{
 	private int cierre;
 	private String telefono;
 	private String web;
-	 //Constructor de Cliente profesional inicial
+	public ArrayList<Producto> productosCliente;
+	
+	
+	
+	
+	
+	//Constructor de Cliente profesional inicial
 	public Profesional(String dni, String nombre, String correo, String clave, String cp, String ciudad, int credito,
 			String descripcion, int apertura, int cierre, String telefono, String web) {
 		super(dni, nombre, correo, clave, cp, ciudad, credito);
@@ -15,6 +22,7 @@ public class Profesional extends Cliente{
 		this.cierre = cierre;
 		this.telefono = telefono;
 		this.web = web;
+		this.productosCliente=new ArrayList<>();//Al crear profesional desde el inicio, crea una lista de productos vacia
 	}
 	//Constructor de Cliente Profesional a partir de Cliente existente
 	public Profesional(Cliente cliente,String descripcion, int apertura, int cierre, String telefono, String web) {
@@ -31,6 +39,7 @@ public class Profesional extends Cliente{
 		this.cierre = cierre;
 		this.telefono = telefono;
 		this.web = web;
+		this.productosCliente=cliente.productosCliente;//Al venir de un cliente existente, el arraylist se traslada tambien
 	}
 	
 	@Override
