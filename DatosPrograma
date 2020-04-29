@@ -1,0 +1,83 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.io.IOException;
+public  class DatosPrograma {
+	public static ArrayList<Cliente>clientes=new ArrayList<Cliente>();
+	public static ArrayList<Producto>productos=new ArrayList<Producto>();
+	
+	public static void crearCliente() {
+		Scanner entrada=new Scanner(System.in);
+		String dni="";
+		String nombre="";
+		String correo="";
+		String clave="";
+		String cp="";
+		String ciudad="";
+		int credito=0;
+		System.out.println("Introduzca su DNI");
+		try {
+			dni=Integer.toString(entrada.nextInt());
+		}catch(Exception e) {
+			System.out.println("Error");
+		}
+		System.out.println("Introduzca su nombre");
+		try {
+			nombre=entrada.nextLine();
+			}catch(Exception e) {
+				System.out.println("Error");
+			}
+		System.out.println("Introduzca su correo");
+		try {
+			correo=entrada.nextLine();
+			}catch(Exception e) {
+				System.out.println("Error");
+			}
+
+		System.out.println("Introduzca su clave");
+		try {
+			clave=entrada.nextLine();
+			}catch(Exception e) {
+				System.out.println("Error");
+			}
+		System.out.println("Introduzca su codigo postal");
+		try {
+			cp=entrada.nextLine();
+			}catch(Exception e) {
+				System.out.println("Error");
+			}
+		System.out.println("Introduzca su ciudad");
+		try {
+			ciudad=entrada.nextLine();
+			}catch(Exception e) {
+				System.out.println("Error");
+			}
+		System.out.println("Introduzca su tarjeta de credito");
+		try {
+			credito= entrada.nextInt();
+			}catch(Exception e) {
+				System.out.println("Error");
+			}
+		Cliente cliente=new Cliente(dni,nombre,correo,clave,cp,ciudad,credito);//Crea nuevo cliente con los datos
+		clientes.add(cliente);//Añade a la lista de clientes
+			
+	}
+	public static void retirarProducto(Producto producto) { //Si el producto se encuentra en la lista general, se retira.
+		if(productos.contains(producto)) {
+			productos.remove(producto);
+		}else {System.out.println("Este producto no se encuentra en su lista.");
+		}
+	}
+	public static void añadirProducto(Producto producto) {//Si el producto no se encuentra en la lista general, se añade.
+		if(!productos.contains(producto)) {
+			productos.add(producto);
+		}else {System.out.println("Este producto ya se encuentra en su lista.");
+	}
+	}
+	public static void retirarCliente(Cliente cliente) { //Si el cliente se encuentra en la lista general, se retira.
+		if(clientes.contains(cliente)) {
+			clientes.remove(cliente);
+		}else {System.out.println("Este cliente no se encuentra en su lista.");
+		}
+	
+}
+}
