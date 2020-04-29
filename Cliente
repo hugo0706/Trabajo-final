@@ -13,12 +13,14 @@ public class Cliente {
 	public static void añadirProducto(Producto producto) {//Si el producto no se encuentra en la lista personal del cliente, se añade.
 		if(!productosCliente.contains(producto)) {
 			productosCliente.add(producto);
+			DatosPrograma.añadirProducto(producto);//Añade producto a la lista general de productos
 		}else {System.out.println("Este producto ya se encuentra en su lista.");
 	}
 	}
 	public static void retirarProducto(Producto producto) { //Si el producto se encuentra en la lista personal del cliente, se retira.
 		if(productosCliente.contains(producto)) {
 			productosCliente.remove(producto);
+			DatosPrograma.retirarProducto(producto);//Retira producto de la lista general de productos
 		}else {System.out.println("Este producto no se encuentra en su lista.");
 		}
 	}
