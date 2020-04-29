@@ -10,6 +10,24 @@ public class Cliente {
 	public int credito;
 	public ArrayList<Producto> productosCliente; //Arraylist con los productos propios de cada cliente
 	
+	public void añadirProducto(Producto producto) {//Si el producto no se encuentra en la lista personal del cliente, se añade.
+		if(!productosCliente.contains(producto)) {
+			this.productosCliente.add(producto);
+		}else {System.out.println("Este producto ya se encuentra en su lista.");
+	}
+	}
+	public void retirarProducto(Producto producto) { //Si el producto se encuentra en la lista personal del cliente, se retira.
+		if(productosCliente.contains(producto)) {
+			this.productosCliente.remove(producto);
+		}else {System.out.println("Este producto no se encuentra en su lista.");
+		}
+	}
+
+	
+	
+	
+	
+	
 	
 	public Cliente() {
 		super();
@@ -23,8 +41,12 @@ public class Cliente {
 		this.cp = cp;
 		this.ciudad = ciudad;
 		this.credito = credito;
+		this.productosCliente =new ArrayList<>(); //Crea Arraylist vacio cada vez que se crea un cliente 
 	}
 	
+	public ArrayList<Producto> getProductosCliente(){ //Retorna arraylist con productos de un cliente
+		return productosCliente;
+	}
 	public String getDni() {
 		return dni;
 	}
@@ -76,7 +98,7 @@ public class Cliente {
 	@Override
 	public String toString() {
 		return "Cliente [dni=" + dni + ", nombre=" + nombre + ", correo=" + correo + ", clave=" + clave + ", cp=" + cp
-				+ ", ciudad=" + ciudad + ", credito=" + credito + "]";
+				+ ", ciudad=" + ciudad + ", credito=" + credito + "Productos"+productosCliente+"]";
 	}
 	public String getCiudad() {
 		return ciudad;
