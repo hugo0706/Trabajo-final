@@ -4,7 +4,7 @@ import java.io.IOException;
 public  class DatosPrograma {
 	public static ArrayList<Cliente>clientes=new ArrayList<Cliente>();
 	public static ArrayList<Producto>productos=new ArrayList<Producto>();
-	
+	//Contiene funciones para crear/eliminar cliente,y añadir/eliminar producto
 	public static void crearCliente() {
 		Scanner entrada=new Scanner(System.in);
 		String dni="";
