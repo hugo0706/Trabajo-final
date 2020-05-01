@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
-
-public class Cliente {
+import java.util.Scanner;
+public class Cliente implements Serializable {
 	public String dni;
 	public String nombre;
 	public String correo;
@@ -8,14 +9,92 @@ public class Cliente {
 	public String cp;
 	public String ciudad;
 	public int credito;
-	public ArrayList<Producto> productosCliente; //Arraylist con los productos propios de cada cliente
+	public static ArrayList<Producto> productosCliente; //Arraylist con los productos propios de cada cliente
+	//Atributos de profesional
+	private String descripcion;
+	private int apertura;
+	private int cierre;
+	private String telefono;
+	private String web;
+	
+	public static void añadirProducto(Producto producto) {//Si el producto no se encuentra en la lista personal del cliente, se añade.
+		if(!productosCliente.contains(producto)) {
+			productosCliente.add(producto);
+			DatosPrograma.añadirProducto(producto);//Añade producto a la lista general de productos
+		}else {System.out.println("Este producto ya se encuentra en su lista.");
+	}
+	}
+	public static void retirarProducto(Producto producto) { //Si el producto se encuentra en la lista personal del cliente, se retira.
+		if(productosCliente.contains(producto)) {
+			productosCliente.remove(producto);
+			DatosPrograma.retirarProducto(producto);//Retira producto de la lista general de productos
+		}else {System.out.println("Este producto no se encuentra en su lista.");
+		}
+	}
+	
+	public void hacerUrgente() {
+		Scanner entrada=new Scanner(System.in);
+		for(Producto i:productosCliente) {
+			System.out.println(i.getTitulo());
+		}
+		System.out.println("Indique el nombre del producto Urgente.");
+		String nombre=entrada.nextLine();
+		for(Producto i:productosCliente) {
+			if(nombre.equals(i.getTitulo()) && !i.isUrgente()) {
+				i.setUrgente(true);
+				System.out.println("Ha convertido "+i.getTitulo()+" en urgente con tarjeta "+this.credito);
+			}else {
+				System.out.println("Ha introducido un nombre incorrecto o su producto ya era urgente.");
+			}
+		}
+	}
+	
+	public static void hacerProfesional() {
+		
+	}
+	
+	public static void comprarProducto() {
+		
+	}
+	
+	public void hacerProfesional() {
+		Scanner entrada=new Scanner(System.in);
+		System.out.println("Introduce descripcion: ");
+		String descripcion=entrada.nextLine();
+		System.out.println("Introduce apertura (int 0-24): ");
+		int  apertura=entrada.nextInt();
+		System.out.println("Introduce cierre (int 0-24): ");
+		int cierre=entrada.nextInt();
+		System.out.println("Introduce telefono: ");
+		String telefono=entrada.nextLine();
+		System.out.println("Introduce web: ");
+		String web=entrada.nextLine();
+		this.setApertura(apertura);
+		this.setCierre(cierre);
+		this.setDescripcion(descripcion);
+		this.setTelefono(telefono);
+		this.setWeb(web);
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 	public Cliente() {
 		super();
 	}
+
 	public Cliente(String dni, String nombre, String correo, String clave, String cp, String ciudad, int credito) {
-		
+		//atributos vacios de cliente profesional
+		this.descripcion = null;
+		this.apertura = null;
+		this.cierre = null;
+		this.telefono = null;
+		this.web = null;
+		//atributos de cliente normal
 		this.dni = dni;
 		this.nombre = nombre;
 		this.correo = correo;
@@ -23,8 +102,31 @@ public class Cliente {
 		this.cp = cp;
 		this.ciudad = ciudad;
 		this.credito = credito;
+		this.productosCliente =new ArrayList<>(); //Crea Arraylist vacio cada vez que se crea un cliente 
 	}
 	
+	//constructor de cliente profesional inicial
+	public Cliente(String dni, String nombre, String correo, String clave, String cp, String ciudad, int credito, 
+			String descripcion, int apertura, int cierre, String telefono, String web) {
+		super();
+		this.dni = dni;
+		this.nombre = nombre;
+		this.correo = correo;
+		this.clave = clave;
+		this.cp = cp;
+		this.ciudad = ciudad;
+		this.credito = credito;
+		this.descripcion = descripcion;
+		this.apertura = apertura;
+		this.cierre = cierre;
+		this.telefono = telefono;
+		this.web = web;
+		this.productosCliente =new ArrayList<>(); //Crea Arraylist vacio cada vez que se crea un cliente 
+	}
+	
+	public ArrayList<Producto> getProductosCliente(){ //Retorna arraylist con productos de un cliente
+		return productosCliente;
+	}
 	public String getDni() {
 		return dni;
 	}
@@ -76,13 +178,43 @@ public class Cliente {
 	@Override
 	public String toString() {
 		return "Cliente [dni=" + dni + ", nombre=" + nombre + ", correo=" + correo + ", clave=" + clave + ", cp=" + cp
-				+ ", ciudad=" + ciudad + ", credito=" + credito + "]";
+				+ ", ciudad=" + ciudad + ", credito=" + credito + "Productos"+productosCliente+"]";
 	}
 	public String getCiudad() {
 		return ciudad;
 	}
 	public void setCiudad(String ciudad) {
 		this.ciudad = ciudad;
+	}
+	public String getDescripcion() {
+		return descripcion;
+	}
+	public int getApertura() {
+		return apertura;
+	}
+	public int getCierre() {
+		return cierre;
+	}
+	public String getTelefono() {
+		return telefono;
+	}
+	public String getWeb() {
+		return web;
+	}
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+	public void setApertura(int apertura) {
+		this.apertura = apertura;
+	}
+	public void setCierre(int cierre) {
+		this.cierre = cierre;
+	}
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+	public void setWeb(String web) {
+		this.web = web;
 	}
 	
 	
