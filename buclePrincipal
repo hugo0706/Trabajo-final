@@ -1,0 +1,101 @@
+package ElFinal;
+
+/**
+ *
+ * @author Revij
+ */
+import java.util.Scanner; 
+import java.util.ArrayList;
+public class BuclePrincipal {
+
+    
+    
+    public static Cliente comparaCorreos(String correo, ArrayList<Cliente> lista){
+        boolean coincide = false;
+        Cliente elem = new Cliente();
+        for (Cliente k: lista){
+            String correoComparado = k.getCorreo();
+            coincide = correo.equals(correoComparado);
+            if (coincide){
+                elem = k;
+                return elem;
+            }
+            
+        }
+        return elem;
+        
+    }
+    
+    
+    public static boolean enLista(String correo, ArrayList<Cliente> lista){
+        boolean dentro = false;
+         for (Cliente k: lista){
+            String correoComparado = k.getCorreo();
+            dentro = correo.equals(correoComparado);
+            if (dentro){
+                System.out.println("Correo aceptado");
+                break;
+            }
+        }
+        if (dentro == false){
+            System.out.println("Correo o contraseña incorrecta");
+        }
+        return dentro;
+    }
+         
+         
+    public static void main(String[] args) {
+        Cliente elem;
+        Cliente v = new Cliente("correodeusodejavi", "r");
+
+        ArrayList<Cliente> clientes = new ArrayList<>();
+        clientes.add(v);
+
+        boolean logged = false;
+        String correo = "";
+        
+        do{    
+            
+            Scanner entrada = new Scanner(System.in); 
+            System.out.print("Correo electrónico: ");
+            correo = entrada.nextLine();
+            logged = enLista(correo, clientes);
+            
+            while (logged){
+                System.out.println("1 para buscar un producto\n2 para vender un nuevo producto:"
+                    + "\n3 para dar de baja un producto\n4 para convertirse en cliente profesional"
+                    + "\5 para salir");
+            
+                Scanner menu = new Scanner(System.in);
+                String opcion = menu.nextLine();
+                elem = comparaCorreos(correo, clientes);
+        
+                if (opcion.equals("1")){
+            
+
+                break;
+                }
+                else if(opcion.equals("2")){
+                    break;
+                }
+
+                else if(opcion.equals("3")){
+                    break;
+                }
+
+                else if(opcion.equals("4")){
+                    break;
+                }
+
+                else {
+                    break;
+                }
+                }
+        } while (logged == false);
+        
+        
+        
+        
+    }       
+    
+}
