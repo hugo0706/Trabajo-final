@@ -17,6 +17,20 @@ public class Cliente implements Serializable {
 	private String telefono;
 	private String web;
 	
+	public static Producto crearProducto() {
+		Scanner entrada=new Scanner(System.in);
+		System.out.println("Introduce titulo");
+		String titulo=entrada.nextLine();
+		System.out.println("Introduce categoria");
+		String categoria=entrada.nextLine();
+		System.out.println("Introduce estado");
+		String estado=entrada.nextLine();
+		System.out.println("Introduce descripcion");
+		String descripcion=entrada.nextLine();
+		System.out.println("Introduce precio (double)");
+		double precio=entrada.nextDouble();
+		return new Producto(titulo,categoria,estado,descripcion,precio);
+	}
 	public static void añadirProducto(Producto producto) {//Si el producto no se encuentra en la lista personal del cliente, se añade.
 		if(!productosCliente.contains(producto)) {
 			productosCliente.add(producto);
@@ -49,11 +63,9 @@ public class Cliente implements Serializable {
 		}
 	}
 	
-	public static void hacerProfesional() {
-		
-	}
+
 	
-	public static void comprarProducto() {
+	public void comprarProducto() {
 		
 	}
 	
@@ -74,6 +86,7 @@ public class Cliente implements Serializable {
 		this.setDescripcion(descripcion);
 		this.setTelefono(telefono);
 		this.setWeb(web);
+		System.out.println("Ahora es profesional.");
 	}
 	
 	
@@ -89,11 +102,6 @@ public class Cliente implements Serializable {
 
 	public Cliente(String dni, String nombre, String correo, String clave, String cp, String ciudad, int credito) {
 		//atributos vacios de cliente profesional
-		this.descripcion = null;
-		this.apertura = null;
-		this.cierre = null;
-		this.telefono = null;
-		this.web = null;
 		//atributos de cliente normal
 		this.dni = dni;
 		this.nombre = nombre;
