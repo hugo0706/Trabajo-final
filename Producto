@@ -9,7 +9,7 @@ public class Producto implements Serializable {
     private double precio;       
     private boolean venta;    //Booleano que indica si el producto ha sido vendido o no
     private boolean urgente;	//Booleano que indica si es urgente
-    
+    public String cp;
     
 	
     
@@ -110,8 +110,19 @@ public class Producto implements Serializable {
 	public void setUrgente(boolean urgente) {
 		this.urgente = urgente;
 	}
+
+
+
+	public String getCp() {
+		return cp;
+	}
+
+
+
+	public void setCp(String cp) {
+		this.cp = cp;
+	}
     
    
 
     
-}
