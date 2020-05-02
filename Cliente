@@ -31,10 +31,12 @@ public class Cliente implements Serializable {
 		double precio=entrada.nextDouble();
 		return new Producto(titulo,categoria,estado,descripcion,precio);
 	}
-	public static void añadirProducto(Producto producto) {//Si el producto no se encuentra en la lista personal del cliente, se añade.
+	public void añadirProducto(Producto producto) {//Si el producto no se encuentra en la lista personal del cliente, se añade.
 		if(!productosCliente.contains(producto)) {
+			producto.setCp(this.cp);
 			productosCliente.add(producto);
 			DatosPrograma.añadirProducto(producto);//Añade producto a la lista general de productos
+			
 		}else {System.out.println("Este producto ya se encuentra en su lista.");
 	}
 	}
