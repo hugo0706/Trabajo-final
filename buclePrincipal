@@ -1,9 +1,3 @@
-package ElFinal;
-
-/**
- *
- * @author Revij
- */
 import java.util.Scanner; 
 import java.util.ArrayList;
 public class BuclePrincipal {
@@ -42,15 +36,33 @@ public class BuclePrincipal {
         }
         return dentro;
     }
-         
-         
+
+    public static ArrayList<Cliente> cargarClientes(){ //Intenta cargar el array de clientes desde fichero, en caso de no existir crea uno vacio
+    	try {
+    		return DatosPrograma.leerFicheroC(); 
+    	}catch(Exception e) {
+    		return new ArrayList<Cliente>();
+    	}
+    
+    }
+    public static ArrayList<Producto> cargarProductos(){ //Intenta cargar el array de productos desde fichero, en caso de no existir crea uno vacio
+    	try {
+    		return DatosPrograma.leerFicheroP(); 
+    	}catch(Exception e) {
+    		return new ArrayList<Producto>();
+    	}
+    
+    }
+    
     public static void main(String[] args) {
-        Cliente elem;
-        Cliente v = new Cliente("correodeusodejavi", "r");
-
-        ArrayList<Cliente> clientes = new ArrayList<>();
-        clientes.add(v);
-
+        //FASE DE CARGA DE INFORMACION DESDE FICHERO
+    	DatosPrograma.productos= cargarProductos();
+    	DatosPrograma.clientes=cargarClientes();
+    	//FIN DE FASE DE CARGA DE INFORMACION DESDE FICHERO
+ 
+    	
+    	//FASE DE INICIO DE SESION
+    	Cliente elem;
         boolean logged = false;
         String correo = "";
         
@@ -59,7 +71,7 @@ public class BuclePrincipal {
             Scanner entrada = new Scanner(System.in); 
             System.out.print("Correo electrónico: ");
             correo = entrada.nextLine();
-            logged = enLista(correo, clientes);
+            logged = enLista(correo, DatosPrograma.clientes);
             
             while (logged){
                 System.out.println("1 para buscar un producto\n2 para vender un nuevo producto:"
@@ -68,7 +80,7 @@ public class BuclePrincipal {
             
                 Scanner menu = new Scanner(System.in);
                 String opcion = menu.nextLine();
-                elem = comparaCorreos(correo, clientes);
+                elem = comparaCorreos(correo, DatosPrograma.clientes);
         
                 if (opcion.equals("1")){
             
@@ -88,11 +100,14 @@ public class BuclePrincipal {
                 }
 
                 else {
+                	
                     break;
                 }
                 }
         } while (logged == false);
-        
+        //Cuando se termina el programa actualizamos los ficheros
+        DatosPrograma.actualizarProductos(DatosPrograma.productos);
+       	DatosPrograma.actualizarClientes(DatosPrograma.clientes);
         
         
         
