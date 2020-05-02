@@ -1,5 +1,6 @@
+import java.io.Serializable;
 import java.time.LocalDate;  
-public class Producto {
+public class Producto implements Serializable {
     private LocalDate fechaPublicacion;    
     private String categoria;     
     private String estado;     //Nuevo, seminuevo, decente.....
@@ -7,7 +8,11 @@ public class Producto {
     private String titulo;   //Resumen del producto con palabras clave
     private double precio;       
     private boolean venta;    //Booleano que indica si el producto ha sido vendido o no
-
+    private boolean urgente;	//Booleano que indica si es urgente
+    
+    
+	
+    
     public Producto(String titulo, String categoria, String estado, String descripcion, double precio) {
         this.categoria = categoria;
         this.estado = estado;
@@ -15,6 +20,7 @@ public class Producto {
         this.titulo = titulo;
         this.precio = precio;
         this.venta = false;     //Siempre se inicia como falso
+        this.urgente=false;  //Se inicia como falso
         this.fechaPublicacion = LocalDate.now();        //Fecha de publicacion = momento en el que se crea el producto
                 
     }
@@ -85,6 +91,27 @@ public class Producto {
     public LocalDate getfechaPublicacion(){
         return fechaPublicacion;
     }
+
+
+
+	@Override
+	public String toString() {
+		return "Producto [fechaPublicacion=" + fechaPublicacion + ", categoria=" + categoria + ", estado=" + estado
+				+ ", descripcion=" + descripcion + ", titulo=" + titulo + ", precio=" + precio + ", venta=" + venta
+				+ "]";
+	}
+
+
+	public boolean isUrgente() {
+		return urgente;
+	}
+
+
+	public void setUrgente(boolean urgente) {
+		this.urgente = urgente;
+	}
+    
+   
 
     
 }
