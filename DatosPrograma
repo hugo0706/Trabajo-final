@@ -4,6 +4,7 @@ public  class DatosPrograma {
 	public static ArrayList<Cliente>clientes=new ArrayList<Cliente>();
 	public static ArrayList<Producto>productos=new ArrayList<Producto>();
 	//Contiene funciones para crear/eliminar cliente,y añadir/eliminar producto
+
 	public static void crearCliente() {
 		Scanner entrada=new Scanner(System.in);
 		String dni="";
@@ -16,14 +17,17 @@ public  class DatosPrograma {
 		System.out.println("Introduzca su DNI");
 		try {
 			dni=Integer.toString(entrada.nextInt());
+			nombre=entrada.nextLine();//se hace para quemar una linea, si no daria error porque nextInt dejaria una linea de retraso
 		}catch(Exception e) {
 			System.out.println("Error");
 		}
 		System.out.println("Introduzca su nombre");
 		try {
+			
 			nombre=entrada.nextLine();
-			}catch(Exception e) {
-				System.out.println("Error");
+			
+		}catch(Exception e) {
+			System.out.println("Error");
 			}
 		System.out.println("Introduzca su correo");
 		try {
@@ -69,6 +73,7 @@ public  class DatosPrograma {
 	public static void añadirProducto(Producto producto) {//Si el producto no se encuentra en la lista general, se añade.
 		if(!productos.contains(producto)) {
 			productos.add(producto);
+			System.out.println("Se ha añadido");
 		}else {System.out.println("Este producto ya se encuentra en su lista.");
 	}
 	}
@@ -76,6 +81,13 @@ public  class DatosPrograma {
 		if(clientes.contains(cliente)) {
 			clientes.remove(cliente);
 		}else {System.out.println("Este cliente no se encuentra en su lista.");
+		}
+	
+}
+	public static void añadirCliente(Cliente cliente) { //Si el cliente se encuentra en la lista general, se retira.
+		if(!clientes.contains(cliente)) {
+			clientes.add(cliente);
+		}else {System.out.println("Este cliente se encuentra en su lista.");
 		}
 	
 }
