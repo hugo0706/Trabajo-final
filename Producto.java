@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.time.LocalDate;  
 public class Producto implements Serializable {
     private LocalDate fechaPublicacion;    
@@ -10,11 +11,13 @@ public class Producto implements Serializable {
     private boolean venta;    //Booleano que indica si el producto ha sido vendido o no
     private boolean urgente;	//Booleano que indica si es urgente
     public String cp;
+    private ArrayList<String> comprador; //guarda nombre y dni de su comprador
     
 	
     
-    public Producto(String titulo, String categoria, String estado, String descripcion, double precio) {
-        this.categoria = categoria;
+    public Producto(String titulo, String categoria, String estado, String descripcion, double precio,String cp) {
+    	this.cp=cp;
+    	this.categoria = categoria;
         this.estado = estado;
         this.descripcion = descripcion;
         this.titulo = titulo;
@@ -31,9 +34,9 @@ public class Producto implements Serializable {
         return venta;
     }
     
-    public boolean vendido(){
-        this.venta = true;
-        return venta;            
+    public void setVenta(boolean valor){
+        this.venta = valor;
+                
     }
 
     
@@ -122,7 +125,16 @@ public class Producto implements Serializable {
 	public void setCp(String cp) {
 		this.cp = cp;
 	}
-    
+
+
+	public void setComprador(String nombre,String dni) {
+		this.comprador.add(nombre);
+		this.comprador.add(dni);
+	}
+	public ArrayList<String> getComprador(){
+		return this.comprador;
+	}
    
 
     
+}
