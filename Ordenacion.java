@@ -1,9 +1,3 @@
-package PaqueteFinal;
-
-/**
- *
- * @author Revij
- */
 import java.util.ArrayList;
 public class Ordenacion {
     public static ArrayList<Producto> ordenaCoPostal(String codigo, ArrayList<Producto> productos){
@@ -35,53 +29,59 @@ public class Ordenacion {
             
             
         }
-        for (Producto enLista:muyProximo){
-            listaFinal.add(enLista);
-        }
         for (Producto enLista:proximo){
-            listaFinal.add(enLista);
+            muyProximo.add(enLista);
         }
         for (Producto enLista:indiferente){
-            listaFinal.add(enLista);
+            muyProximo.add(enLista);
         }
             
-    return listaFinal;   
+    return muyProximo;   
     }
+    
+    
     public static ArrayList<Producto> BuscaOrdena(String palabrasClave, ArrayList<Producto> productos, String codigo){
+        ArrayList<Producto> urgentes = new ArrayList<Producto>();
         ArrayList<Producto> iguales = new ArrayList<Producto>();
         ArrayList<Producto> parecidos = new ArrayList<Producto>();
         ArrayList<Producto> restantes = new ArrayList<Producto>();
-        ArrayList<Producto> listaFinal = new ArrayList<Producto>();
         
         for (Producto p: productos){
-            if (palabrasClave.equals(p.getTitulo())){
+            if (p.isUrgente()){
+                urgentes.add(p);
+            }
+            else {
+                if (palabrasClave.equals(p.getTitulo())){
                 iguales.add(p);
-                continue;
-            }
-            else if(p.getTitulo().contains(palabrasClave)){
+                }
+                else if(p.getTitulo().contains(palabrasClave)){
                 parecidos.add(p);
-            }
-            else{
+                }
+                else{
                 restantes.add(p);
+                }
             }
+            
         }
+        urgentes = ordenaCoPostal(codigo, urgentes);
         iguales = ordenaCoPostal(codigo, iguales);
         parecidos = ordenaCoPostal(codigo, parecidos);
         restantes = ordenaCoPostal(codigo, restantes);
         
         for (Producto p:iguales){
-            listaFinal.add(p);
+            urgentes.add(p);
             
         }
         for (Producto p:parecidos){
-            listaFinal.add(p);
+            urgentes.add(p);
             
         }
+    
         for (Producto p:restantes){
-            listaFinal.add(p);
+            urgentes.add(p);
             
         }
         
-        return listaFinal;        
+        return urgentes;        
     }
 }
