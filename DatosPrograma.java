@@ -1,8 +1,10 @@
 import java.io.*;
+
 import java.util.*;
 public  class DatosPrograma {
 	public static ArrayList<Cliente>clientes=new ArrayList<Cliente>();
 	public static ArrayList<Producto>productos=new ArrayList<Producto>();
+	public static ArrayList<Venta>ventas=new ArrayList<Venta>();
 	//Contiene funciones para crear/eliminar cliente,y añadir/eliminar producto
 
 	public static void crearCliente() {
@@ -113,6 +115,16 @@ public  class DatosPrograma {
 			
 		}
 	}
+	public static void actualizarVentas(ArrayList<Venta>ventas) {
+		try {
+			ObjectOutputStream ficheroVentas=new ObjectOutputStream(new FileOutputStream("ventas.txt"));
+			ficheroVentas.writeObject(ventas);
+			ficheroVentas.close();
+		}catch(Exception e){
+			System.out.println("Error al transferir a fichero ventas");
+			
+		}
+	}
 	public static ArrayList<Cliente> leerFicheroC() {
 		ArrayList<Cliente> clientesGuardados=new ArrayList<Cliente>();
 		try {
@@ -134,5 +146,16 @@ public  class DatosPrograma {
 			System.out.println("Errror al leer fichero Productos");
 		}
 		return productosGuardados;
+	}
+	public static ArrayList<Venta> leerFicheroV() {
+		ArrayList<Venta> ventasGuardadas=new ArrayList<Venta>();
+		try {
+		ObjectInputStream ficheroVentas=new ObjectInputStream(new FileInputStream("ventas.txt"));
+		ventasGuardadas=(ArrayList<Venta>) ficheroVentas.readObject();
+		ficheroVentas.close();
+		}catch(Exception e) {
+			System.out.println("Errror al leer fichero ventas");
+		}
+		return ventasGuardadas;
 	}
 }
