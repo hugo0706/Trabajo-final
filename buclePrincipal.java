@@ -53,13 +53,22 @@ public class BuclePrincipal {
     	}
     
     }
+    public static ArrayList<Venta> cargarVentas(){ //Intenta cargar el array de ventas desde fichero, en caso de no existir crea uno vacio
+    	try {
+    		return DatosPrograma.leerFicheroV(); 
+    	}catch(Exception e) {
+    		return new ArrayList<Venta>();
+    	}
+    
+    }
     
     public static void main(String[] args) {
         //FASE DE CARGA DE INFORMACION DESDE FICHERO
     	DatosPrograma.productos= cargarProductos();
     	DatosPrograma.clientes=cargarClientes();
+    	DatosPrograma.ventas=cargarVentas();
     	//FIN DE FASE DE CARGA DE INFORMACION DESDE FICHERO
- 
+    	DatosPrograma.crearCliente();
     	
     	//FASE DE INICIO DE SESION
     	Cliente elem;
@@ -108,7 +117,7 @@ public class BuclePrincipal {
         //Cuando se termina el programa actualizamos los ficheros
         DatosPrograma.actualizarProductos(DatosPrograma.productos);
        	DatosPrograma.actualizarClientes(DatosPrograma.clientes);
-        
+     	DatosPrograma.actualizarVentas(DatosPrograma.ventas);
         
         
     }       
