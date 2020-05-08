@@ -1,4 +1,6 @@
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Cliente implements Serializable {
@@ -17,7 +19,7 @@ public class Cliente implements Serializable {
 	private String telefono;
 	private String web;
 	
-	public static Producto crearProducto() {
+	public  Producto crearProducto() {
 		Scanner entrada=new Scanner(System.in);
 		System.out.println("Introduce titulo");
 		String titulo=entrada.nextLine();
@@ -29,7 +31,7 @@ public class Cliente implements Serializable {
 		String descripcion=entrada.nextLine();
 		System.out.println("Introduce precio (double)");
 		double precio=entrada.nextDouble();
-		return new Producto(titulo,categoria,estado,descripcion,precio);
+		return new Producto(titulo,categoria,estado,descripcion,precio,this.cp);
 	}
 	public void añadirProducto(Producto producto) {//Si el producto no se encuentra en la lista personal del cliente, se añade.
 		if(!productosCliente.contains(producto)) {
@@ -65,11 +67,138 @@ public class Cliente implements Serializable {
 		}
 	}
 	
-
-	
-	public void comprarProducto() {
-		
+	public void comprobarCompra() {
+		Scanner entrada=new Scanner(System.in);
+		for(Producto p: this.productosCliente) {
+			if(p.isVenta()) {
+				boolean terminado =false;
+				while(!terminado) {	
+					System.out.println("¿Quiere aceptar la venta del producto" +p.getTitulo()+"?"+"Si/No");
+					String decision= entrada.nextLine();
+				
+					if(decision.toUpperCase().equals("SI")){
+						System.out.println("Ha vendido el producto");
+						Venta v =new Venta(p.getfechaPublicacion(),p.getCategoria(),p.getEstado(),p.getDescripcion(),p.getTitulo(),
+								p.getPrecio(),p.getCp(),LocalDateTime.now(),this.getNombre(),p.getComprador().get(0),this.getDni(),p.getComprador().get(1));
+						DatosPrograma.ventas.add(v);
+						retirarProducto(p);
+						terminado=true;
+					}else if(decision.toUpperCase().equals("NO")) { //Si no acepta la compra, el producto deja de estar pendiente de vender
+						System.out.println("No acepta la compra");
+						p.setVenta(false);
+						terminado=true;
+					}
+					else{
+						System.out.println("Introduce SI/NO");
+					}
+		}
+		}
 	}
+	}
+	public static ArrayList<Producto> ordenaCoPostal(String codigo, ArrayList<Producto> productos){
+        char caracter0 = codigo.charAt(0);
+        char caracter1 = codigo.charAt(1);
+        char caracter2 = codigo.charAt(2);
+        char comparable0; 
+        char comparable1; 
+        char comparable2; 
+        ArrayList<Producto> muyProximo = new ArrayList<Producto>();
+        ArrayList<Producto> proximo = new ArrayList<Producto>();
+        ArrayList<Producto> indiferente = new ArrayList<Producto>();
+        ArrayList<Producto> listaFinal = new ArrayList<Producto>();
+        
+        for (Producto variable : productos){
+            comparable0 = (variable.getCp()).charAt(0);
+            comparable1 = (variable.getCp()).charAt(1);
+            comparable2 = (variable.getCp()).charAt(2);
+            if (comparable0 == caracter0 && comparable1 == caracter1 && comparable2 == caracter2){
+                muyProximo.add(variable);
+            }
+            else if (comparable0 == caracter0 && comparable1 == caracter1){
+                proximo.add(variable);
+                
+            }
+            else{
+                indiferente.add(variable);
+            }
+            
+            
+        }
+        for (Producto enLista:proximo){
+            muyProximo.add(enLista);
+        }
+        for (Producto enLista:indiferente){
+            muyProximo.add(enLista);
+        }
+            
+    return muyProximo;   
+    }
+    
+    
+    public static ArrayList<Producto> buscaOrdena(String palabrasClave, ArrayList<Producto> productos, String codigo){
+        ArrayList<Producto> urgentes = new ArrayList<Producto>();
+        ArrayList<Producto> iguales = new ArrayList<Producto>();
+        ArrayList<Producto> parecidos = new ArrayList<Producto>();
+        ArrayList<Producto> restantes = new ArrayList<Producto>();
+        
+        for (Producto p: productos){
+            if (p.isUrgente()){
+                urgentes.add(p);
+            }
+            else {
+                if (palabrasClave.equals(p.getTitulo())){
+                iguales.add(p);
+                }
+                else if(p.getTitulo().contains(palabrasClave)){
+                parecidos.add(p);
+                }
+                else{
+                restantes.add(p);
+                }
+            }
+            
+        }
+        urgentes = ordenaCoPostal(codigo, urgentes);
+        iguales = ordenaCoPostal(codigo, iguales);
+        parecidos = ordenaCoPostal(codigo, parecidos);
+        restantes = ordenaCoPostal(codigo, restantes);
+        
+        for (Producto p:iguales){
+            urgentes.add(p);
+            
+        }
+        for (Producto p:parecidos){
+            urgentes.add(p);
+            
+        }
+    
+        for (Producto p:restantes){
+            urgentes.add(p);
+            
+        }
+        
+        return urgentes;        
+    }
+	public void comprarProducto(String palabrasClave) {
+		Scanner entrada=new Scanner(System.in);
+		ArrayList<Producto> productosDisponibles = buscaOrdena(palabrasClave,DatosPrograma.productos,this.cp);
+		for(Producto p:productosDisponibles) {
+			System.out.println(p.getTitulo()+ "precio "+p.getPrecio()+"Estado"+p.getEstado());
+		}
+		System.out.println("Escribe el nombre del producto que quieres comprar: ");
+		String nombre=entrada.nextLine();
+		for(Producto p:productosDisponibles) {
+			if(nombre.equals(p.getTitulo())) {
+				System.out.println("Ha solicitado comprar: "+p.getTitulo()+"por valor "+p.getPrecio()+" con tarjeta "+this.getCredito());
+				p.setVenta(true); //Pone el marcador del producto en vendido para ser aceptado por el vendedor mas tarde
+				p.setComprador(this.nombre, this.dni);
+			}else {
+				System.out.println("El nombre que ha introducido es incorrecto");
+			}
+		}
+	}
+	
+	
 	
 	public void hacerProfesional() {
 		Scanner entrada=new Scanner(System.in);
@@ -88,7 +217,7 @@ public class Cliente implements Serializable {
 		this.setDescripcion(descripcion);
 		this.setTelefono(telefono);
 		this.setWeb(web);
-		System.out.println("Ahora es profesional.");
+		System.out.println("Ahora es profesional. Transaccion de 30€. Tarjeta:"+this.credito);
 	}
 	
 	
