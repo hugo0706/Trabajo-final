@@ -193,22 +193,21 @@ public class Cliente implements Serializable {
      * @return lista de productos inicial ordenada mediante la semejanza del código postal
      */
 	public static ArrayList<Producto> ordenaCoPostal(String codigo, ArrayList<Producto> productos){
-        char caracter0 = codigo.charAt(0);
+        char caracter0 = codigo.charAt(0);  //Se separan los 3 primeros numeros del codigo postal
         char caracter1 = codigo.charAt(1);
         char caracter2 = codigo.charAt(2);
         char comparable0; 
         char comparable1; 
         char comparable2; 
-        ArrayList<Producto> muyProximo = new ArrayList<Producto>();
+        ArrayList<Producto> muyProximo = new ArrayList<Producto>();  //3 listas para los 3 tipos de proximidades
         ArrayList<Producto> proximo = new ArrayList<Producto>();
         ArrayList<Producto> indiferente = new ArrayList<Producto>();
-        ArrayList<Producto> listaFinal = new ArrayList<Producto>();
         
         for (Producto variable : productos){
             comparable0 = (variable.getCp()).charAt(0);
             comparable1 = (variable.getCp()).charAt(1);
             comparable2 = (variable.getCp()).charAt(2);
-            if (comparable0 == caracter0 && comparable1 == caracter1 && comparable2 == caracter2){
+            if (comparable0 == caracter0 && comparable1 == caracter1 && comparable2 == caracter2){  
                 muyProximo.add(variable);
             }
             else if (comparable0 == caracter0 && comparable1 == caracter1){
@@ -220,7 +219,7 @@ public class Cliente implements Serializable {
             }
             
             
-        }
+        }  //Se introducen el contenido de la lista "proximo e "indiferente en e arrayList MuyProximo
         for (Producto enLista:proximo){
             muyProximo.add(enLista);
         }
@@ -245,8 +244,14 @@ public class Cliente implements Serializable {
         ArrayList<Producto> parecidos = new ArrayList<Producto>();
         ArrayList<Producto> restantes = new ArrayList<Producto>();
         
-        for (Producto p: productos){
-            if (p.isUrgente()){
+        for (Producto p: productos){  
+            /*Para evitar que un producto sea comprado por dos personas antes de que el dueño acepte la compra
+            se impide la entrada de dichos productos en la busqueda mediante este if*/
+            if (p.isVenta()){  
+                System.out.println("El producto " + p.getTitulo() + " se encuentra reservado en estos momentos");
+            }
+            else { //Los productos que no esten en espera entran aquí
+                if (p.isUrgente()){ //Los productos urgentes tienen prioridad
                 urgentes.add(p);
             }
             else {
@@ -260,7 +265,7 @@ public class Cliente implements Serializable {
                 restantes.add(p);
                 }
             }
-            
+            }
         }
         urgentes = ordenaCoPostal(codigo, urgentes);
         iguales = ordenaCoPostal(codigo, iguales);
