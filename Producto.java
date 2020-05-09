@@ -1,6 +1,14 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.time.LocalDate;  
+/**
+ * 
+ * Esta Clase pretende construir un producto y recoge sus métodos asociados
+ * 
+ * @author Javier Carrizosa Bermejo
+ * @author Hugo García Calvo
+ *
+ */
 public class Producto implements Serializable {
     private LocalDate fechaPublicacion;    
     private String categoria;     
