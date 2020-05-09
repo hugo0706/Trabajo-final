@@ -36,48 +36,57 @@ public class Cliente implements Serializable {
 	 * @return Retorna un objeto de la clase Producto
 	 */
 	public  Producto crearProducto() {
-		Scanner entrada=new Scanner(System.in);
-		String titulo="";
-		String categoria="";
-		String estado="";
-		String descripcion="";
-		double precio=0;
-		boolean correcto=false;
-		while(!correcto) {
-			System.out.println("Introduce titulo");
-			try {
-				titulo=entrada.nextLine();
-			}catch(Exception e) {
-				continue;
-			}
-			System.out.println("Introduce categoria");
-			try {
-				categoria=entrada.nextLine();
-			}catch(Exception e) {
-				continue;
-			}
-			System.out.println("Introduce estado");
-			try {
-				estado=entrada.nextLine();
-			}catch(Exception e) {
-				continue;
-			}
-			System.out.println("Introduce descripcion");
-			try {
-				descripcion=entrada.nextLine();
-			}catch(Exception e) {
-				continue;
-			}
-			System.out.println("Introduce precio (double)");
-			try {
-				precio=entrada.nextDouble();
-				correcto=true;
-			}catch(Exception e) {
-				continue;
-			}
-		}
-		return new Producto(titulo,categoria,estado,descripcion,precio,this.cp);
-	}
+        String estadosPosibles[]= {"NUEVO","COMO NUEVO","BUENO","ACEPTABLE","REGULAR"};
+        Scanner entrada=new Scanner(System.in);
+        String titulo="";
+        String categoria="";
+        String estado="";
+        String descripcion="";
+        double precio=0;
+        boolean correcto=false;
+        while(!correcto) {
+            System.out.println("Introduce titulo");
+            try {
+                titulo=entrada.nextLine();
+            }catch(Exception e) {
+                continue;
+            }
+            System.out.println("Introduce categoria");
+            try {
+                categoria=entrada.nextLine();
+            }catch(Exception e) {
+                continue;
+            }
+            boolean estadoAceptado=false;
+            while(!estadoAceptado) {
+            System.out.println("Introduce estado(Nuevo/Como nuevo/Bueno/Aceptable/Regular");
+            try {
+                estado=entrada.nextLine();
+                for(String e:estadosPosibles) {
+                    if(estado.toUpperCase().equals(e)) {
+                        estadoAceptado=true;
+                    }
+                }
+            }catch(Exception e) {
+                continue;
+            }
+            }
+            System.out.println("Introduce descripcion");
+            try {
+                descripcion=entrada.nextLine();
+            }catch(Exception e) {
+                continue;
+            }
+            System.out.println("Introduce precio (double)");
+            try {
+                precio=entrada.nextDouble();
+                correcto=true;
+            }catch(Exception e) {
+                continue;
+            }
+        }
+        return new Producto(titulo,categoria,estado,descripcion,precio,this.cp);
+    }
 	
 	/**
 	 * Este método añade un objeto de clase Producto a un array general con todos
