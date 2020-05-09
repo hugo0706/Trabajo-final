@@ -1,10 +1,17 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package EjerFinal;
+
 import java.util.Scanner; 
 import java.util.ArrayList;
 public class BuclePrincipal {
 
     
     
-    public static Cliente comparaCorreos(String correo, ArrayList<Cliente> lista){
+    public static Cliente checkCliente(String correo, ArrayList<Cliente> lista){
         boolean coincide = false;
         Cliente elem = new Cliente();
         for (Cliente k: lista){
@@ -21,13 +28,17 @@ public class BuclePrincipal {
     }
     
     
-    public static boolean enLista(String correo, ArrayList<Cliente> lista){
+    public static boolean comparaUsuario(String correo, ArrayList<Cliente> lista, String contraseña){
         boolean dentro = false;
          for (Cliente k: lista){
             String correoComparado = k.getCorreo();
             dentro = correo.equals(correoComparado);
             if (dentro){
-                System.out.println("Correo aceptado");
+                if (!k.getClave().equals(contraseña)){
+                    dentro = false;
+                }
+                
+                
                 break;
             }
         }
@@ -65,11 +76,39 @@ public class BuclePrincipal {
     public static void main(String[] args) {
         //FASE DE CARGA DE INFORMACION DESDE FICHERO
     	DatosPrograma.productos= cargarProductos();
-    	DatosPrograma.clientes=cargarClientes();
-    	DatosPrograma.ventas=cargarVentas();
+    	DatosPrograma.clientes = cargarClientes();
+    	DatosPrograma.ventas = cargarVentas();
     	//FIN DE FASE DE CARGA DE INFORMACION DESDE FICHERO
-    	DatosPrograma.crearCliente();
-    	
+    	//FASE DE ELECCION REGISTRO/INICIO DE SESION
+        Scanner entrada = new Scanner(System.in); 
+        String quemaLinea = entrada.nextLine();
+        System.out.println("¿Desea iniciar sesion(1) o registrarse(2)");
+        int decision=0;
+        boolean correcto=false;
+        while(!correcto) {
+            try {
+                decision=entrada.nextInt();
+                quemaLinea=entrada.nextLine();
+                correcto=true;
+            }catch(Exception e) {
+                quemaLinea = entrada.nextLine();
+                continue;
+            }
+            }
+        correcto=false;
+        while(!correcto) {
+            if(decision==1) {
+                System.out.println("INICIO DE SESION");
+                correcto=true;
+            }else if(decision==2) {
+                System.out.println("REGISTRO");
+                DatosPrograma.crearCliente();
+                correcto=true;
+            }else {
+                System.out.println("Elija opcion 1 o 2");
+            }
+        }
+        //FIN DE FASE DE ELECCION REGISTRO/INICIO DE SESION 
     	//FASE DE INICIO DE SESION
     	Cliente elem;
         boolean logged = false;
@@ -77,42 +116,71 @@ public class BuclePrincipal {
         
         do{    
             
-            Scanner entrada = new Scanner(System.in); 
             System.out.print("Correo electrónico: ");
             correo = entrada.nextLine();
-            logged = enLista(correo, DatosPrograma.clientes);
+            System.out.print("Contraseña: ");
+            String contraseña = entrada.nextLine();
+            logged = comparaUsuario(correo, DatosPrograma.clientes, contraseña);
             
             while (logged){
-                System.out.println("1 para buscar un producto\n2 para vender un nuevo producto:"
-                    + "\n3 para dar de baja un producto\n4 para convertirse en cliente profesional"
-                    + "\5 para salir");
-            
                 Scanner menu = new Scanner(System.in);
                 String opcion = menu.nextLine();
-                elem = comparaCorreos(correo, DatosPrograma.clientes);
+                elem = checkCliente(correo, DatosPrograma.clientes);
+                elem.comprobarCompra();
+                System.out.println("1 para buscar y comprar productos\n2 para consultar tus productos\n3 para convertirse en cliente profesional"
+                    + "\nCualquier otra tecla para salir");
+            
+                
+                
         
                 if (opcion.equals("1")){
+                    String palabrasClave = menu.nextLine();
+                    elem.comprarProducto(palabrasClave);
             
 
-                break;
                 }
                 else if(opcion.equals("2")){
-                    break;
+                    ArrayList<Producto> tusProductos = elem.getProductosCliente();
+                    System.out.print("1  para dar de alta un nuevo producto"
+                            + "\n 2 para dar de baja un producto\n 3 para hacer urgente un producto ");
+                    String elegir = menu.nextLine();
+                    System.out.print("Estos son sus productos");
+                    for (Producto s: tusProductos){
+                                System.out.println(s.toString());
+                    switch (elegir){
+                        case "1": 
+                            elem.añadirProducto(elem.crearProducto());
+                            break;
+                        case "2":
+                            Producto productoEliminar;
+                            System.out.println("Elija mediante un número el producto a eliminar, la primera posicion se considera 0, la segunda 1...");
+                            int posicionEliminar = menu.nextInt();
+                            quemaLinea = entrada.nextLine();
+                            while (posicionEliminar < tusProductos.size()){
+                                System.out.print("No se ha encontrado el producto, introduzca el número de nuevo");
+                                posicionEliminar = menu.nextInt();
+                                quemaLinea = entrada.nextLine();
+                                
+                                }
+                            productoEliminar = tusProductos.get(posicionEliminar);
+                            elem.retirarProducto(productoEliminar);
+                            break;
+                        case "3":
+                            elem.hacerUrgente();
+                            
+                    }
+                    
                 }
-
+                }
                 else if(opcion.equals("3")){
-                    break;
-                }
-
-                else if(opcion.equals("4")){
-                    break;
+                    elem.hacerProfesional();
                 }
 
                 else {
                 	
                     break;
                 }
-                }
+            }
         } while (logged == false);
         //Cuando se termina el programa actualizamos los ficheros
         DatosPrograma.actualizarProductos(DatosPrograma.productos);
