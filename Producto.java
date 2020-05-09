@@ -126,7 +126,11 @@ public class Producto implements Serializable {
 		this.cp = cp;
 	}
 
-
+	/**
+         * Funcion que guarda el nombre y el dni del comprador que pretenda comprar este producto
+         * @param nombre Generalmente se utilizará el nombre del comprador
+         * @param dni Dni del comprador
+         */
 	public void setComprador(String nombre,String dni) {
 		this.comprador.add(nombre);
 		this.comprador.add(dni);
