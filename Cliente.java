@@ -3,6 +3,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
+/**
+ * 
+ * Esta Clase pretende construir un cliente y recoge los metodos usados por este.
+ * 
+ * @author Javier Carrizosa Bermejo
+ * @author Hugo García Calvo
+ *
+ */
 public class Cliente implements Serializable {
 	public String dni;
 	public String nombre;
@@ -11,45 +19,114 @@ public class Cliente implements Serializable {
 	public String cp;
 	public String ciudad;
 	public int credito;
-	public static ArrayList<Producto> productosCliente; //Arraylist con los productos propios de cada cliente
-	//Atributos de profesional
+	public static ArrayList<Producto> productosCliente;
+	/**
+	 * Atributos de cliente profesional
+	 */
 	private String descripcion;
 	private int apertura;
 	private int cierre;
 	private String telefono;
 	private String web;
 	
+	/**
+	 * 
+	 * Este método crea una instancia de la clase Producto
+	 * 
+	 * @return Retorna un objeto de la clase Producto
+	 */
 	public  Producto crearProducto() {
 		Scanner entrada=new Scanner(System.in);
-		System.out.println("Introduce titulo");
-		String titulo=entrada.nextLine();
-		System.out.println("Introduce categoria");
-		String categoria=entrada.nextLine();
-		System.out.println("Introduce estado");
-		String estado=entrada.nextLine();
-		System.out.println("Introduce descripcion");
-		String descripcion=entrada.nextLine();
-		System.out.println("Introduce precio (double)");
-		double precio=entrada.nextDouble();
+		String titulo="";
+		String categoria="";
+		String estado="";
+		String descripcion="";
+		double precio=0;
+		boolean correcto=false;
+		while(!correcto) {
+			System.out.println("Introduce titulo");
+			try {
+				titulo=entrada.nextLine();
+			}catch(Exception e) {
+				continue;
+			}
+			System.out.println("Introduce categoria");
+			try {
+				categoria=entrada.nextLine();
+			}catch(Exception e) {
+				continue;
+			}
+			System.out.println("Introduce estado");
+			try {
+				estado=entrada.nextLine();
+			}catch(Exception e) {
+				continue;
+			}
+			System.out.println("Introduce descripcion");
+			try {
+				descripcion=entrada.nextLine();
+			}catch(Exception e) {
+				continue;
+			}
+			System.out.println("Introduce precio (double)");
+			try {
+				precio=entrada.nextDouble();
+				correcto=true;
+			}catch(Exception e) {
+				continue;
+			}
+		}
 		return new Producto(titulo,categoria,estado,descripcion,precio,this.cp);
 	}
-	public void añadirProducto(Producto producto) {//Si el producto no se encuentra en la lista personal del cliente, se añade.
+	
+	/**
+	 * Este método añade un objeto de clase Producto a un array general con todos
+	 * los productos de la aplicacion, y a un array con los productos de un cliente
+	 * específico.
+	 * 
+	 * @param producto objeto de clase Producto
+	 */
+	public void añadirProducto(Producto producto) {
+		/**
+		 * Si el producto no se encuentra en la lista personal del cliente, se añade.
+		 */
 		if(!productosCliente.contains(producto)) {
 			producto.setCp(this.cp);
 			productosCliente.add(producto);
-			DatosPrograma.añadirProducto(producto);//Añade producto a la lista general de productos
+			/**
+			 * Añade producto a la lista general de productos
+			 */
+			DatosPrograma.añadirProducto(producto);
 			
 		}else {System.out.println("Este producto ya se encuentra en su lista.");
 	}
 	}
-	public static void retirarProducto(Producto producto) { //Si el producto se encuentra en la lista personal del cliente, se retira.
+	
+	/**
+	 * Este metodo retira un objeto de clase Producto del array general de productos
+	 * y del array personal de productos del cliente
+	 * 
+	 * @param producto objeto de clase Producto
+	 */
+	public static void retirarProducto(Producto producto) { 
+		/**
+		 * Si el producto se encuentra en la lista personal del cliente, se retira.
+		 */
 		if(productosCliente.contains(producto)) {
 			productosCliente.remove(producto);
-			DatosPrograma.retirarProducto(producto);//Retira producto de la lista general de productos
+			/**
+			 * Retira producto de la lista general de productos
+			 */
+			DatosPrograma.retirarProducto(producto);
 		}else {System.out.println("Este producto no se encuentra en su lista.");
 		}
 	}
 	
+	/**
+	 * Este metodo muestra todos los productos de un cliente y, una vez seleccionado
+	 * uno, cambia su estado a urgente, mostrando la transaccion realizada y la 
+	 * tarjeta de credito usada.
+	 */
 	public void hacerUrgente() {
 		Scanner entrada=new Scanner(System.in);
 		for(Producto i:productosCliente) {
@@ -67,12 +144,21 @@ public class Cliente implements Serializable {
 		}
 	}
 	
+	/**
+	 * Este metodo comprueba si alguien ha solicitado la compra de uno de los 
+	 * productos propios del usuario con la sesion abierta, en caso de haber 
+	 * solicitudes, muestra la notificacion y se decide si aceptar o no la compra.
+	 * Si esta es aceptada se guardan los datos de la venta en un array con las 
+	 * ventas totales.
+	 * Si esta no es aceptada el producto deja de estar en estado de compra.
+	 */
 	public void comprobarCompra() {
 		Scanner entrada=new Scanner(System.in);
 		for(Producto p: this.productosCliente) {
 			if(p.isVenta()) {
 				boolean terminado =false;
 				while(!terminado) {	
+					System.out.println("------------NUEVAS NOTIFICACIONES------------");
 					System.out.println("¿Quiere aceptar la venta del producto" +p.getTitulo()+"?"+"Si/No");
 					String decision= entrada.nextLine();
 				
@@ -83,7 +169,10 @@ public class Cliente implements Serializable {
 						DatosPrograma.ventas.add(v);
 						retirarProducto(p);
 						terminado=true;
-					}else if(decision.toUpperCase().equals("NO")) { //Si no acepta la compra, el producto deja de estar pendiente de vender
+					/**
+					 * Si no acepta la compra, el producto deja de estar pendiente de vender
+					 */
+					}else if(decision.toUpperCase().equals("NO")) { 
 						System.out.println("No acepta la compra");
 						p.setVenta(false);
 						terminado=true;
@@ -91,10 +180,18 @@ public class Cliente implements Serializable {
 					else{
 						System.out.println("Introduce SI/NO");
 					}
+		System.out.println("----------NO HAY NOTIFICACIONES----------");
 		}
 		}
 	}
 	}
+	/**
+     * 
+     * Método que ordena una lista de productos comparando producto a producto con el código postal del cliente
+     * @param codigo String del codigo postal, debe contener como minimos 3 caracteres
+     * @param productos Lista de productos a ordenar
+     * @return lista de productos inicial ordenada mediante la semejanza del código postal
+     */
 	public static ArrayList<Producto> ordenaCoPostal(String codigo, ArrayList<Producto> productos){
         char caracter0 = codigo.charAt(0);
         char caracter1 = codigo.charAt(1);
@@ -134,7 +231,14 @@ public class Cliente implements Serializable {
     return muyProximo;   
     }
     
-    
+	/**
+     * Divide la lista en listas más pequeñas según la semejanza entre las palabras claves y el título de cada producto
+     * @param palabrasClave String introducido por el usuario
+     * @param productos Lista de productos
+     * @param codigo codigo postal que corresponderá con el codigo postal del usuario utilizando la aplicación
+     * @return retorna una lista ordenada tanto por código postal como por semejanza con las palabras claves
+     */
+	
     public static ArrayList<Producto> buscaOrdena(String palabrasClave, ArrayList<Producto> productos, String codigo){
         ArrayList<Producto> urgentes = new ArrayList<Producto>();
         ArrayList<Producto> iguales = new ArrayList<Producto>();
@@ -179,6 +283,15 @@ public class Cliente implements Serializable {
         
         return urgentes;        
     }
+    
+    /**
+     * Este metodo hace uso del metodo buscaOrdena para acceder a un array con 
+     * los productos que aparecen en la busqueda, y permite realizar la solicitud
+     * de compra de cualquiera de estos.
+     * 
+     * @param palabrasClave String con palabras clave sobre producto a buscar,
+     * puede ser un string vacio en caso de no usar palabras clave
+     */
 	public void comprarProducto(String palabrasClave) {
 		Scanner entrada=new Scanner(System.in);
 		ArrayList<Producto> productosDisponibles = buscaOrdena(palabrasClave,DatosPrograma.productos,this.cp);
@@ -190,7 +303,10 @@ public class Cliente implements Serializable {
 		for(Producto p:productosDisponibles) {
 			if(nombre.equals(p.getTitulo())) {
 				System.out.println("Ha solicitado comprar: "+p.getTitulo()+"por valor "+p.getPrecio()+" con tarjeta "+this.getCredito());
-				p.setVenta(true); //Pone el marcador del producto en vendido para ser aceptado por el vendedor mas tarde
+				/**
+				 * Pone el marcador del producto en vendido para ser aceptado por el vendedor mas tarde
+				 */
+				p.setVenta(true); 
 				p.setComprador(this.nombre, this.dni);
 			}else {
 				System.out.println("El nombre que ha introducido es incorrecto");
@@ -198,20 +314,47 @@ public class Cliente implements Serializable {
 		}
 	}
 	
-	
+	/**
+	 * Este metodo permite añadir los atributos de profesional a un cliente
+	 * mostrando los datos de la transaccion.
+	 */
 	
 	public void hacerProfesional() {
 		Scanner entrada=new Scanner(System.in);
-		System.out.println("Introduce descripcion: ");
-		String descripcion=entrada.nextLine();
-		System.out.println("Introduce apertura (int 0-24): ");
-		int  apertura=entrada.nextInt();
-		System.out.println("Introduce cierre (int 0-24): ");
-		int cierre=entrada.nextInt();
-		System.out.println("Introduce telefono: ");
-		String telefono=entrada.nextLine();
-		System.out.println("Introduce web: ");
-		String web=entrada.nextLine();
+		boolean correcto=false;
+		while(!correcto) {
+			System.out.println("Introduce descripcion: ");
+			try {
+				descripcion=entrada.nextLine();
+			}catch(Exception e) {
+				continue;
+			}
+			System.out.println("Introduce apertura (int 0-24): ");
+			try {
+				apertura=entrada.nextInt();
+			}catch(Exception e) {
+				continue;
+			}
+			System.out.println("Introduce cierre (int 0-24): ");
+			try {
+				cierre=entrada.nextInt();
+			}catch(Exception e) {
+				continue;
+			}
+			System.out.println("Introduce telefono: ");
+			try {
+				telefono=entrada.nextLine();
+			}catch(Exception e) {
+				continue;
+			}
+			System.out.println("Introduce web: ");
+			try {
+				web=entrada.nextLine();
+				correcto=true;
+			}catch(Exception e) {
+				continue;
+			}
+		}
 		this.setApertura(apertura);
 		this.setCierre(cierre);
 		this.setDescripcion(descripcion);
@@ -230,10 +373,11 @@ public class Cliente implements Serializable {
 	public Cliente() {
 		super();
 	}
-
+	/**
+	 * Este constructor permite instanciar objetos de la clase Cliente.
+	 */
 	public Cliente(String dni, String nombre, String correo, String clave, String cp, String ciudad, int credito) {
-		//atributos vacios de cliente profesional
-		//atributos de cliente normal
+
 		this.dni = dni;
 		this.nombre = nombre;
 		this.correo = correo;
@@ -244,26 +388,8 @@ public class Cliente implements Serializable {
 		this.productosCliente =new ArrayList<>(); //Crea Arraylist vacio cada vez que se crea un cliente 
 	}
 	
-	//constructor de cliente profesional inicial
-	public Cliente(String dni, String nombre, String correo, String clave, String cp, String ciudad, int credito, 
-			String descripcion, int apertura, int cierre, String telefono, String web) {
-		super();
-		this.dni = dni;
-		this.nombre = nombre;
-		this.correo = correo;
-		this.clave = clave;
-		this.cp = cp;
-		this.ciudad = ciudad;
-		this.credito = credito;
-		this.descripcion = descripcion;
-		this.apertura = apertura;
-		this.cierre = cierre;
-		this.telefono = telefono;
-		this.web = web;
-		this.productosCliente =new ArrayList<>(); //Crea Arraylist vacio cada vez que se crea un cliente 
-	}
 	
-	public ArrayList<Producto> getProductosCliente(){ //Retorna arraylist con productos de un cliente
+	public ArrayList<Producto> getProductosCliente(){ 
 		return productosCliente;
 	}
 	public String getDni() {
@@ -313,12 +439,7 @@ public class Cliente implements Serializable {
 	public void setCredito(int credito) {
 		this.credito = credito;
 	}
-
-	@Override
-	public String toString() {
-		return "Cliente [dni=" + dni + ", nombre=" + nombre + ", correo=" + correo + ", clave=" + clave + ", cp=" + cp
-				+ ", ciudad=" + ciudad + ", credito=" + credito + "Productos"+productosCliente+"]";
-	}
+	
 	public String getCiudad() {
 		return ciudad;
 	}
@@ -354,6 +475,12 @@ public class Cliente implements Serializable {
 	}
 	public void setWeb(String web) {
 		this.web = web;
+	}
+	
+	@Override
+	public String toString() {
+		return "Cliente [dni=" + dni + ", nombre=" + nombre + ", correo=" + correo + ", clave=" + clave + ", cp=" + cp
+				+ ", ciudad=" + ciudad + ", credito=" + credito + "Productos"+productosCliente+"]";
 	}
 	
 	
