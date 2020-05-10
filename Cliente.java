@@ -37,6 +37,7 @@ public class Cliente implements Serializable {
 	 */
 	public  Producto crearProducto() {
 		String estadosPosibles[]= {"NUEVO","COMO NUEVO","BUENO","ACEPTABLE","REGULAR"};
+		String categoriasPosibles[]= {"Moda y accesorios","TV, audio y foto","Móviles y telefonía","Informática y electrónica","Consolas y videojuegos","Deporte y ocio"};
 		Scanner entrada=new Scanner(System.in);
 		String titulo="";
 		String categoria="";
@@ -51,9 +52,34 @@ public class Cliente implements Serializable {
 			}catch(Exception e) {
 				continue;
 			}
-			System.out.println("Introduce categoria");
+			System.out.println("Selecciona categoria por su numero: ");
 			try {
-				categoria=entrada.nextLine();
+				int e=0;
+				for(String i:categoriasPosibles) {
+					e++;
+					System.out.println(e+" "+i);
+				}
+				String seleccion=entrada.nextLine();
+				switch(seleccion) {
+					case "1":
+						categoria=categoriasPosibles[0];
+						break;
+					case "2":
+						categoria=categoriasPosibles[1];
+						break;
+					case "3":
+						categoria=categoriasPosibles[2];
+						break;
+					case "4":
+						categoria=categoriasPosibles[3];
+						break;
+					case "5":
+						categoria=categoriasPosibles[4];
+						break;
+					case "6":
+						categoria=categoriasPosibles[5];
+						break;
+				}
 			}catch(Exception e) {
 				continue;
 			}
@@ -85,7 +111,7 @@ public class Cliente implements Serializable {
 				continue;
 			}
 		}
-		return new Producto(titulo,categoria,estado,descripcion,precio,this.cp);
+		return new Producto(titulo,categoria,estado,descripcion,precio,this.cp,this.dni);
 	}
 	
 	/**
@@ -170,20 +196,44 @@ public class Cliente implements Serializable {
 	 */
 	public void comprobarCompra() {
 		Scanner entrada=new Scanner(System.in);
-		for(Producto p: this.productosCliente) {
+		System.out.println("------------NUEVAS NOTIFICACIONES------------");
+
+		for(int i=0;i<this.productosCliente.size();i++) {
+			Producto p=this.productosCliente.get(i);
 			if(p.isVenta()) {
 				boolean terminado =false;
+				
 				while(!terminado) {	
-					System.out.println("------------NUEVAS NOTIFICACIONES------------");
-					System.out.println("¿Quiere aceptar la venta del producto" +p.getTitulo()+"?"+"Si/No");
+					
+					System.out.println("¿Quiere aceptar la venta del producto " +p.getTitulo()+"?"+" Si/No");
 					String decision= entrada.nextLine();
 				
 					if(decision.toUpperCase().equals("SI")){
+						i=i-1;
 						System.out.println("Ha vendido el producto");
 						Venta v =new Venta(p.getfechaPublicacion(),p.getCategoria(),p.getEstado(),p.getDescripcion(),p.getTitulo(),
 								p.getPrecio(),p.getCp(),LocalDateTime.now(),this.getNombre(),p.getComprador().get(0),this.getDni(),p.getComprador().get(1));
+						System.out.println(v);
 						DatosPrograma.ventas.add(v);
-						retirarProducto(p);
+						for(Producto pCliente:this.productosCliente) {
+							if(p.getTitulo().equals(pCliente.getTitulo())) {
+								this.productosCliente.remove(pCliente);		
+								
+								break;
+							}
+						}
+						
+						for(Producto pGeneral: DatosPrograma.productos) {
+							if(pGeneral.getTitulo().equals(p.getTitulo())) {
+								if(pGeneral.getDniDueño().equals(this.dni)) {
+									DatosPrograma.productos.remove(pGeneral);
+									
+									break;
+								}
+								
+							}
+						}
+						
 						terminado=true;
 					/**
 					 * Si no acepta la compra, el producto deja de estar pendiente de vender
@@ -196,10 +246,12 @@ public class Cliente implements Serializable {
 					else{
 						System.out.println("Introduce SI/NO");
 					}
-		System.out.println("----------NO HAY NOTIFICACIONES----------");
 		}
+				
 		}
+		
 	}
+		System.out.println("----------NO HAY NOTIFICACIONES----------");
 	}
 	/**
      * 
@@ -308,14 +360,57 @@ public class Cliente implements Serializable {
      * @param palabrasClave String con palabras clave sobre producto a buscar,
      * puede ser un string vacio en caso de no usar palabras clave
      */
-	public void comprarProducto(String palabrasClave) {
-		Scanner entrada=new Scanner(System.in);
-		ArrayList<Producto> productosDisponibles = buscaOrdena(palabrasClave,DatosPrograma.productos,this.cp);
+    public void comprarProducto(String palabrasClave) {
+		Scanner entrada = new Scanner(System.in);
+		ArrayList<Producto> productosDisponibles = new ArrayList<Producto>();
+                String categoria = "";
+                String categoriasPosibles[]= {"Moda y accesorios","TV, audio y foto","Móviles y telefonía","Informática y electrónica","Consolas y videojuegos","Deporte y ocio"};
+                System.out.println("Selecciona categoria por su numero: ");
+                int e=0;
+                for(String i:categoriasPosibles) {
+                    e++;
+                    System.out.println(e+" "+i);
+                }
+                String seleccion=entrada.nextLine();
+                switch(seleccion) {
+                    case "1":
+                        categoria=categoriasPosibles[0];
+                        break;
+                    case "2":
+                        categoria=categoriasPosibles[1];
+                        break;
+                    case "3":
+                        categoria=categoriasPosibles[2];
+                        break;
+                    case "4":
+                        categoria=categoriasPosibles[3];
+                        break;
+                    case "5":
+                        categoria=categoriasPosibles[4];
+                        break;
+                    case "6":
+                        categoria=categoriasPosibles[5];
+                        break;
+                }
+                
+                
+                
+                for (Producto purga:DatosPrograma.productos){
+                    if (categoria.equals(purga.getCategoria())){
+                        if (!purga.getDniDueño().equals(this.dni)){
+                            productosDisponibles.add(purga);
+                        }
+                    }
+                    
+                }        
+                productosDisponibles = buscaOrdena(palabrasClave,productosDisponibles,this.cp);
+                        
+                        
 		if(productosDisponibles.isEmpty()) {
 			System.out.println("No hay ningun producto disponible.");
 		}else {
 			for(Producto p:productosDisponibles) {
-				System.out.println(p.getTitulo()+ "precio "+p.getPrecio()+"Estado"+p.getEstado());
+				System.out.println(p.getTitulo()+ " precio "+p.getPrecio()+" Estado "+p.getEstado());
 			}
 			System.out.println("Escribe el nombre del producto que quieres comprar: ");
 			String nombre=entrada.nextLine();
@@ -325,8 +420,24 @@ public class Cliente implements Serializable {
 					/**
 					 * Pone el marcador del producto en vendido para ser aceptado por el vendedor mas tarde
 					 */
-					p.setVenta(true); 
-					p.setComprador(this.nombre, this.dni);
+					for(Producto producto:DatosPrograma.productos) {
+						if(producto.getTitulo().equals(nombre))//Si el nombre del producto coincide
+							if(p.getDniDueño().equals(producto.getDniDueño())) {//si los dnis de los dueños coinciden
+								producto.setVenta(true); 
+								producto.setComprador(this.nombre, this.dni);
+								String dniDueño=producto.getDniDueño();
+								for(Cliente elem:DatosPrograma.clientes) {
+									if(elem.dni.equals(dniDueño)) {
+										for(Producto pDueño:elem.getProductosCliente()) {
+											if(pDueño.getTitulo().equals(nombre)) {
+												pDueño.setVenta(true);
+												pDueño.setComprador(this.nombre, this.dni);
+											}
+										}
+									}
+								}
+								}
+							}
 				}else {
 					System.out.println("El nombre que ha introducido es incorrecto");
 				}
@@ -358,6 +469,7 @@ public class Cliente implements Serializable {
 			System.out.println("Introduce cierre (int 0-24): ");
 			try {
 				cierre=entrada.nextInt();
+				telefono=entrada.nextLine();
 			}catch(Exception e) {
 				continue;
 			}
