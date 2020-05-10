@@ -11,8 +11,9 @@ public class Producto implements Serializable {
     private boolean venta;    //Booleano que indica si el producto ha sido vendido o no
     private boolean urgente;	//Booleano que indica si es urgente
     public String cp;
-    private ArrayList<String> comprador;
+    public ArrayList<String> comprador=new ArrayList<String>();
     private LocalDate fechaUrgente;
+    private String dniDueño;
     
     
     /**
@@ -25,7 +26,7 @@ public class Producto implements Serializable {
     }
 	
     
-    public Producto(String titulo, String categoria, String estado, String descripcion, double precio,String cp) {
+    public Producto(String titulo, String categoria, String estado, String descripcion, double precio,String cp,String dniDueño) {
     	this.cp=cp;
     	this.categoria = categoria;
         this.estado = estado;
@@ -35,7 +36,7 @@ public class Producto implements Serializable {
         this.venta = false;     //Siempre se inicia como falso
         this.urgente=false;  //Se inicia como falso
         this.fechaPublicacion = LocalDate.now();        //Fecha de publicacion = momento en el que se crea el producto
-                
+        this.dniDueño=dniDueño;
     }
     
     
@@ -51,7 +52,17 @@ public class Producto implements Serializable {
 
     
 
-    public double getPrecio() {
+    public String getDniDueño() {
+		return dniDueño;
+	}
+
+
+	public void setDniDueño(String dniDueño) {
+		this.dniDueño = dniDueño;
+	}
+
+
+	public double getPrecio() {
         return precio;
     }
 
