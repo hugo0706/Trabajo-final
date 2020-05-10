@@ -135,10 +135,8 @@ public class BuclePrincipal implements Serializable {
                 Scanner menu = new Scanner(System.in);
                 
                 elem = checkCliente(correo, DatosPrograma.clientes);
-                System.out.println(elem.toString());
+                System.out.println(elem.getProductosCliente());
                 System.out.println(DatosPrograma.productos);
-                System.out.println(DatosPrograma.clientes);
-
                 System.out.println("1 para buscar y comprar productos\n2 para consultar tus productos\n3 para convertirse en cliente profesional"
                     +"\n4 para comprobar notificaciones"+ "\nCualquier otra tecla para salir");
                 String opcion = menu.nextLine();
@@ -209,11 +207,8 @@ public class BuclePrincipal implements Serializable {
                     
                 else {
                     DatosPrograma.actualizarProductos(DatosPrograma.productos);
-                    System.out.println(DatosPrograma.clientes);
                    	DatosPrograma.actualizarClientes(DatosPrograma.clientes);
-                    System.out.println(DatosPrograma.clientes);
                  	DatosPrograma.actualizarVentas(DatosPrograma.ventas);
-                 	System.out.println(DatosPrograma.clientes);;
                     break;
                 }
         
