@@ -112,6 +112,13 @@ public class Venta implements Serializable {
 		public void setDniC(String dniC) {
 			this.dniC = dniC;
 		}
+		@Override
+		public String toString() {
+			return "Venta: categoria=" + categoria + "  estado=" + estado
+					+ " descripcion=" + descripcion + "\n titulo=" + titulo + " precio=" + precio + " cp=" + cp
+					+ "\n fechaVenta=" + fechaVenta + "\n vendedor=" + vendedor + ", comprador=" + comprador + ", dniV="
+					+ dniV + ", dniC=" + dniC + "]";
+		}
 	    
 	    
 }
