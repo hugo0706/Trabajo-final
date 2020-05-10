@@ -28,16 +28,27 @@ public  class DatosPrograma implements Serializable {
 		String ciudad="";
 		int credito=0;
 		boolean correcto=false;
+                boolean cifrasDNI = false;
 		while(!correcto) {
 			System.out.println("Introduzca su DNI");
-			try {
+                        while (!cifrasDNI){ //Sistema de seguridad para que no se meta un dni incorrecto
+			try {   
+                                System.out.println("Introduzca la parte numerica (8 números)");
 				dni=Integer.toString(entrada.nextInt());
+                                int conversion = Integer.parseInt(dni);
+                                if (dni.length() == 8){
+                                    String letraDNI = entrada.nextLine();
+                                    dni += letraDNI;
+                                    cifrasDNI = true;
+                                    
+                                }
 				nombre=entrada.nextLine();//se hace para quemar una linea, si no daria error porque nextInt dejaria una linea de retraso
 			}catch(Exception e) {
 				System.out.println("Error");
 				nombre=entrada.nextLine();
 				continue;
 			}
+                        }
 			System.out.println("Introduzca su nombre");
 			try {
 				
@@ -152,7 +163,7 @@ public  class DatosPrograma implements Serializable {
 	 */
 	public static void actualizarClientes(ArrayList<Cliente> clientes) {
 		try {
-			FileOutputStream fos=new FileOutputStream("clientes.dat");
+			FileOutputStream fos=new FileOutputStream("clientes.txt");
 			ObjectOutputStream ficheroClientes=new ObjectOutputStream(fos);
 			ficheroClientes.writeObject(clientes);
 			ficheroClientes.close();
@@ -206,7 +217,7 @@ public  class DatosPrograma implements Serializable {
 	public static ArrayList<Cliente> leerFicheroC() {
 		ArrayList<Cliente> clientesGuardados=new ArrayList<Cliente>();
 		try {
-		FileInputStream fis=new FileInputStream("clientes.dat");
+		FileInputStream fis=new FileInputStream("clientes.txt");
 		ObjectInputStream ficheroClientes=new ObjectInputStream(fis);
 		clientesGuardados=(ArrayList<Cliente>) ficheroClientes.readObject();
 		
