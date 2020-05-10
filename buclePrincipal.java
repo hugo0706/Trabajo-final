@@ -1,32 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package EjerFinal;
-
 import java.util.Scanner; 
+import java.io.Serializable;
 import java.util.ArrayList;
-public class BuclePrincipal {
+public class BuclePrincipal implements Serializable {
 
-    
-    
-    public static Cliente checkCliente(String correo, ArrayList<Cliente> lista){
-        boolean coincide = false;
-        Cliente elem = new Cliente();
-        for (Cliente k: lista){
-            String correoComparado = k.getCorreo();
-            coincide = correo.equals(correoComparado);
-            if (coincide){
-                elem = k;
-                return elem;
-            }
-            
-        }
-        return elem;
-        
-    }
-    
+	
     
     public static boolean comparaUsuario(String correo, ArrayList<Cliente> lista, String contraseña){
         boolean dentro = false;
@@ -47,16 +24,41 @@ public class BuclePrincipal {
         }
         return dentro;
     }
-
-    public static ArrayList<Cliente> cargarClientes(){ //Intenta cargar el array de clientes desde fichero, en caso de no existir crea uno vacio
+    
+    public static Cliente checkCliente(String correo, ArrayList<Cliente> lista){
+        boolean coincide = false;
+        Cliente elem = new Cliente();
+        for (Cliente k: lista){
+            String correoComparado = k.getCorreo();
+            coincide = correo.equals(correoComparado);
+            if (coincide){
+                elem = k;
+                return elem;
+            }
+            
+        }
+        return elem;
+        
+    }
+/**
+ * Este metodo Intenta cargar el array de clientes desde fichero, en caso de no existir crea uno vacio y lo retorna.
+ * 
+ */
+    public static ArrayList<Cliente> cargarClientes(){ 
     	try {
     		return DatosPrograma.leerFicheroC(); 
     	}catch(Exception e) {
+    		System.out.println("Error al cargar clientes");
     		return new ArrayList<Cliente>();
+    		
     	}
     
     }
-    public static ArrayList<Producto> cargarProductos(){ //Intenta cargar el array de productos desde fichero, en caso de no existir crea uno vacio
+    /**
+     * Este metodo Intenta cargar el array de productos desde fichero, en caso de no existir crea uno vacio y lo retorna.
+     * 
+     */
+    public static ArrayList<Producto> cargarProductos(){ 
     	try {
     		return DatosPrograma.leerFicheroP(); 
     	}catch(Exception e) {
@@ -64,7 +66,11 @@ public class BuclePrincipal {
     	}
     
     }
-    public static ArrayList<Venta> cargarVentas(){ //Intenta cargar el array de ventas desde fichero, en caso de no existir crea uno vacio
+    /**
+     * Este metodo Intenta cargar el array de ventas	 desde fichero, en caso de no existir crea uno vacio y lo retorna.
+     * 
+     */
+    public static ArrayList<Venta> cargarVentas(){ 
     	try {
     		return DatosPrograma.leerFicheroV(); 
     	}catch(Exception e) {
@@ -74,13 +80,15 @@ public class BuclePrincipal {
     }
     
     public static void main(String[] args) {
-        //FASE DE CARGA DE INFORMACION DESDE FICHERO
+        //FASE DE CARGA DE INFORMACION DESDE FICHERO    	
     	DatosPrograma.productos= cargarProductos();
     	DatosPrograma.clientes = cargarClientes();
     	DatosPrograma.ventas = cargarVentas();
+    	
     	//FIN DE FASE DE CARGA DE INFORMACION DESDE FICHERO
     	//FASE DE ELECCION REGISTRO/INICIO DE SESION
         Scanner entrada = new Scanner(System.in); 
+        System.out.println("Pulsa enter para comenzar.");
         String quemaLinea = entrada.nextLine();
         System.out.println("¿Desea iniciar sesion(1) o registrarse(2)");
         int decision=0;
@@ -98,7 +106,7 @@ public class BuclePrincipal {
         correcto=false;
         while(!correcto) {
             if(decision==1) {
-                System.out.println("INICIO DE SESION");
+                
                 correcto=true;
             }else if(decision==2) {
                 System.out.println("REGISTRO");
@@ -114,8 +122,9 @@ public class BuclePrincipal {
         boolean logged = false;
         String correo = "";
         
-        do{    
-            
+        do{  
+        	
+            System.out.println("INICIO DE SESION");
             System.out.print("Correo electrónico: ");
             correo = entrada.nextLine();
             System.out.print("Contraseña: ");
@@ -124,46 +133,62 @@ public class BuclePrincipal {
             
             while (logged){
                 Scanner menu = new Scanner(System.in);
-                String opcion = menu.nextLine();
+                
                 elem = checkCliente(correo, DatosPrograma.clientes);
-                elem.comprobarCompra();
+                System.out.println(elem.toString());
+                System.out.println(DatosPrograma.productos);
+                System.out.println(DatosPrograma.clientes);
+
                 System.out.println("1 para buscar y comprar productos\n2 para consultar tus productos\n3 para convertirse en cliente profesional"
-                    + "\nCualquier otra tecla para salir");
-            
+                    +"\n4 para comprobar notificaciones"+ "\nCualquier otra tecla para salir");
+                String opcion = menu.nextLine();
                 
                 
         
                 if (opcion.equals("1")){
+                	System.out.println("Introduce las palabras clave del producto a buscar\n(en caso de no querer, pulsa enter");
                     String palabrasClave = menu.nextLine();
                     elem.comprarProducto(palabrasClave);
             
 
                 }
                 else if(opcion.equals("2")){
-                    ArrayList<Producto> tusProductos = elem.getProductosCliente();
+                    
+                	ArrayList<Producto> tusProductos = elem.getProductosCliente();
+                
                     System.out.print("1  para dar de alta un nuevo producto"
                             + "\n 2 para dar de baja un producto\n 3 para hacer urgente un producto ");
                     String elegir = menu.nextLine();
-                    System.out.print("Estos son sus productos");
-                    for (Producto s: tusProductos){
-                                System.out.println(s.toString());
+                    
+                    
                     switch (elegir){
                         case "1": 
                             elem.añadirProducto(elem.crearProducto());
                             break;
                         case "2":
-                            Producto productoEliminar;
+                        	if(tusProductos==null) {
+                            	System.out.println("No tiene productos todavia");
+                            }else {
+                            	int i=0; 
+                            	System.out.println("Estos son sus productos: ");
+                               	 for (Producto s:tusProductos){
+                                         
+                               		 System.out.println(i+" "+s.getTitulo());
+                               		 i++;  
+                               	}
+                            }
+                          
                             System.out.println("Elija mediante un número el producto a eliminar, la primera posicion se considera 0, la segunda 1...");
                             int posicionEliminar = menu.nextInt();
-                            quemaLinea = entrada.nextLine();
-                            while (posicionEliminar < tusProductos.size()){
-                                System.out.print("No se ha encontrado el producto, introduzca el número de nuevo");
-                                posicionEliminar = menu.nextInt();
-                                quemaLinea = entrada.nextLine();
+                            
+                            if (posicionEliminar <= tusProductos.size() || 0<=posicionEliminar){
+                            	System.out.println("Se ha eliminado "+tusProductos.get(posicionEliminar).getTitulo());
+                            	elem.retirarProducto(tusProductos.get(posicionEliminar));
                                 
                                 }
-                            productoEliminar = tusProductos.get(posicionEliminar);
-                            elem.retirarProducto(productoEliminar);
+                            else {
+                            	 System.out.print("No se ha encontrado el producto, introduzca el número de nuevo");
+                            }
                             break;
                         case "3":
                             elem.hacerUrgente();
@@ -171,23 +196,33 @@ public class BuclePrincipal {
                     }
                     
                 }
-                }
+                
                 else if(opcion.equals("3")){
                     elem.hacerProfesional();
                 }
-
+                
+                else if(opcion.equals("4")){
+                	 elem.comprobarCompra();
+                }
+                
+                
+                    
                 else {
-                	
+                    DatosPrograma.actualizarProductos(DatosPrograma.productos);
+                    System.out.println(DatosPrograma.clientes);
+                   	DatosPrograma.actualizarClientes(DatosPrograma.clientes);
+                    System.out.println(DatosPrograma.clientes);
+                 	DatosPrograma.actualizarVentas(DatosPrograma.ventas);
+                 	System.out.println(DatosPrograma.clientes);;
                     break;
                 }
-            }
+        
+        }
         } while (logged == false);
         //Cuando se termina el programa actualizamos los ficheros
-        DatosPrograma.actualizarProductos(DatosPrograma.productos);
-       	DatosPrograma.actualizarClientes(DatosPrograma.clientes);
-     	DatosPrograma.actualizarVentas(DatosPrograma.ventas);
-        
-        
-    }       
     
+        
+    }
 }
+      
+    
