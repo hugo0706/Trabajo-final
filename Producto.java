@@ -1,14 +1,6 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.time.LocalDate;  
-/**
- * 
- * Esta Clase pretende construir un producto y recoge sus métodos asociados
- * 
- * @author Javier Carrizosa Bermejo
- * @author Hugo García Calvo
- *
- */
 public class Producto implements Serializable {
     private LocalDate fechaPublicacion;    
     private String categoria;     
@@ -19,8 +11,18 @@ public class Producto implements Serializable {
     private boolean venta;    //Booleano que indica si el producto ha sido vendido o no
     private boolean urgente;	//Booleano que indica si es urgente
     public String cp;
-    private ArrayList<String> comprador; //guarda nombre y dni de su comprador
+    private ArrayList<String> comprador;
+    private LocalDate fechaUrgente;
     
+    
+    /**
+     * Cuando un producto se haga urgente se llamará a esta funciçon para a notar la fecha
+     */
+    public void estableceFechaUrgente(){
+        LocalDate fecha = LocalDate.now().plusDays(7);
+        this.fechaUrgente = fecha;
+
+    }
 	
     
     public Producto(String titulo, String categoria, String estado, String descripcion, double precio,String cp) {
@@ -103,16 +105,6 @@ public class Producto implements Serializable {
         return fechaPublicacion;
     }
 
-
-
-	@Override
-	public String toString() {
-		return "Producto [fechaPublicacion=" + fechaPublicacion + ", categoria=" + categoria + ", estado=" + estado
-				+ ", descripcion=" + descripcion + ", titulo=" + titulo + ", precio=" + precio + ", venta=" + venta
-				+ "]";
-	}
-
-
 	public boolean isUrgente() {
 		return urgente;
 	}
@@ -134,11 +126,7 @@ public class Producto implements Serializable {
 		this.cp = cp;
 	}
 
-	/**
-         * Funcion que guarda el nombre y el dni del comprador que pretenda comprar este producto
-         * @param nombre Generalmente se utilizará el nombre del comprador
-         * @param dni Dni del comprador
-         */
+
 	public void setComprador(String nombre,String dni) {
 		this.comprador.add(nombre);
 		this.comprador.add(dni);
@@ -147,6 +135,14 @@ public class Producto implements Serializable {
 		return this.comprador;
 	}
    
+
+    
+	@Override
+	public String toString() {
+		return "Producto [fechaPublicacion=" + fechaPublicacion + ", categoria=" + categoria + ", estado=" + estado
+				+ ", descripcion=" + descripcion + ", titulo=" + titulo + ", precio=" + precio + ", venta=" + venta
+				+" Urgente"+urgente+"CP"+cp+  "]";
+	}
 
     
 }
