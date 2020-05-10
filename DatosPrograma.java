@@ -37,7 +37,8 @@ public  class DatosPrograma implements Serializable {
 				dni=Integer.toString(entrada.nextInt());
                                 int conversion = Integer.parseInt(dni);
                                 if (dni.length() == 8){
-                                    String letraDNI = entrada.nextLine();
+                                    System.out.println("Introduce letra");
+                                	String letraDNI = entrada.nextLine();
                                     dni += letraDNI;
                                     cifrasDNI = true;
                                     
@@ -113,6 +114,7 @@ public  class DatosPrograma implements Serializable {
 		System.out.println("Cuenta "+nombre+" creada correctamente.");
 	}		
 	
+	
 	/**
 	 * Este metodo retira un producto del arraylist general de productos
 	 * @param producto objeto de clase Producto
@@ -163,7 +165,7 @@ public  class DatosPrograma implements Serializable {
 	 */
 	public static void actualizarClientes(ArrayList<Cliente> clientes) {
 		try {
-			FileOutputStream fos=new FileOutputStream("clientes.txt");
+			FileOutputStream fos=new FileOutputStream("clientes.dat");
 			ObjectOutputStream ficheroClientes=new ObjectOutputStream(fos);
 			ficheroClientes.writeObject(clientes);
 			ficheroClientes.close();
@@ -217,7 +219,7 @@ public  class DatosPrograma implements Serializable {
 	public static ArrayList<Cliente> leerFicheroC() {
 		ArrayList<Cliente> clientesGuardados=new ArrayList<Cliente>();
 		try {
-		FileInputStream fis=new FileInputStream("clientes.txt");
+		FileInputStream fis=new FileInputStream("clientes.dat");
 		ObjectInputStream ficheroClientes=new ObjectInputStream(fis);
 		clientesGuardados=(ArrayList<Cliente>) ficheroClientes.readObject();
 		
