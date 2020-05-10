@@ -159,7 +159,7 @@ public class Cliente implements Serializable {
 			 * Retira producto de la lista general de productos
 			 */
 			DatosPrograma.retirarProducto(producto);
-		}else {System.out.println("Este producto no se encuentra en su lista.");
+		}else {
 		}
 	}
 	
@@ -169,19 +169,27 @@ public class Cliente implements Serializable {
 	 * tarjeta de credito usada.
 	 */
 	public void hacerUrgente() {
-		Scanner entrada=new Scanner(System.in);
-		for(Producto i:productosCliente) {
-			System.out.println(i.getTitulo());
-		}
-		System.out.println("Indique el nombre del producto Urgente.");
-		String nombre=entrada.nextLine();
-		for(Producto i:productosCliente) {
-			if(nombre.equals(i.getTitulo()) && !i.isUrgente()) {
-				i.setUrgente(true);
-				System.out.println("Ha convertido "+i.getTitulo()+" en urgente con tarjeta "+this.credito);
-				i.estableceFechaUrgente();
-			}else {
-				System.out.println("Ha introducido un nombre incorrecto o su producto ya era urgente.");
+        Scanner entrada=new Scanner(System.in);
+        for(Producto i:productosCliente) {
+            System.out.println(i.getTitulo());
+        }
+        System.out.println("Indique el nombre del producto Urgente.");
+        String nombre=entrada.nextLine();
+        for(Producto i:productosCliente) {
+            if(nombre.equals(i.getTitulo()) && !i.isUrgente()) {
+                            for (Producto d: DatosPrograma.productos){
+                                if (d.getTitulo().equals(i.getTitulo()) && d.getDniDueño().equals(i.getDniDueño())){
+                                    System.out.print("Buenas tardes, ");
+                                    d.setUrgente(true);
+                                    d.estableceFechaUrgente();
+                                    i.setUrgente(true);
+                                    System.out.println("ha convertido "+i.getTitulo()+" en urgente con tarjeta "+this.credito);
+                                    i.estableceFechaUrgente();
+                                }
+
+                            }
+			}else if(i.isUrgente()) {
+				System.out.println("Ya es urgente");
 			}
 		}
 	}
@@ -251,7 +259,7 @@ public class Cliente implements Serializable {
 		}
 		
 	}
-		System.out.println("----------NO HAY NOTIFICACIONES----------");
+		System.out.println("------------NO HAY NOTIFICACIONES------------");
 	}
 	/**
      * 
@@ -412,39 +420,44 @@ public class Cliente implements Serializable {
 			for(Producto p:productosDisponibles) {
 				System.out.println(p.getTitulo()+ " precio "+p.getPrecio()+" Estado "+p.getEstado());
 			}
-			System.out.println("Escribe el nombre del producto que quieres comprar: ");
+			System.out.println("Escribe el nombre del producto que quieres comprar:  (Escribe 0 para salir) ");
 			String nombre=entrada.nextLine();
-			for(Producto p:productosDisponibles) {
-				if(nombre.equals(p.getTitulo())) {
-					System.out.println("Ha solicitado comprar: "+p.getTitulo()+"por valor "+p.getPrecio()+" con tarjeta "+this.getCredito());
-					/**
-					 * Pone el marcador del producto en vendido para ser aceptado por el vendedor mas tarde
-					 */
-					for(Producto producto:DatosPrograma.productos) {
-						if(producto.getTitulo().equals(nombre))//Si el nombre del producto coincide
-							if(p.getDniDueño().equals(producto.getDniDueño())) {//si los dnis de los dueños coinciden
-								producto.setVenta(true); 
-								producto.setComprador(this.nombre, this.dni);
-								String dniDueño=producto.getDniDueño();
-								for(Cliente elem:DatosPrograma.clientes) {
-									if(elem.dni.equals(dniDueño)) {
-										for(Producto pDueño:elem.getProductosCliente()) {
-											if(pDueño.getTitulo().equals(nombre)) {
-												pDueño.setVenta(true);
-												pDueño.setComprador(this.nombre, this.dni);
+			
+			if(!nombre.equals("0")) {
+				for(Producto p:productosDisponibles) {
+					if(nombre.equals(p.getTitulo())) {
+						System.out.println("Ha solicitado comprar: "+p.getTitulo()+"por valor "+p.getPrecio()+" con tarjeta "+this.getCredito());
+						/**
+						 * Pone el marcador del producto en vendido para ser aceptado por el vendedor mas tarde
+						 */
+						for(Producto producto:DatosPrograma.productos) {
+							if(producto.getTitulo().equals(nombre))//Si el nombre del producto coincide
+								if(p.getDniDueño().equals(producto.getDniDueño())) {//si los dnis de los dueños coinciden
+									producto.setVenta(true); 
+									producto.setComprador(this.nombre, this.dni);
+									String dniDueño=producto.getDniDueño();
+									for(Cliente elem:DatosPrograma.clientes) {
+										if(elem.dni.equals(dniDueño)) {
+											for(Producto pDueño:elem.getProductosCliente()) {
+												if(pDueño.getTitulo().equals(nombre)) {
+													pDueño.setVenta(true);
+													pDueño.setComprador(this.nombre, this.dni);
+												}
 											}
 										}
 									}
+									}
+							
 								}
-								}
-							}
-				}else {
-					System.out.println("El nombre que ha introducido es incorrecto");
+					}else {
+						
+					}
+					break;
 				}
-			}
-		}
+				
+		}else {}
 	}
-	
+    }
 	/**
 	 * Este metodo permite añadir los atributos de profesional a un cliente
 	 * mostrando los datos de la transaccion.
