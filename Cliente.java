@@ -19,7 +19,7 @@ public class Cliente implements Serializable {
 	public String cp;
 	public String ciudad;
 	public int credito;
-	public static ArrayList<Producto> productosCliente;
+	private ArrayList<Producto> productosCliente;
 	/**
 	 * Atributos de cliente profesional
 	 */
@@ -36,57 +36,57 @@ public class Cliente implements Serializable {
 	 * @return Retorna un objeto de la clase Producto
 	 */
 	public  Producto crearProducto() {
-        String estadosPosibles[]= {"NUEVO","COMO NUEVO","BUENO","ACEPTABLE","REGULAR"};
-        Scanner entrada=new Scanner(System.in);
-        String titulo="";
-        String categoria="";
-        String estado="";
-        String descripcion="";
-        double precio=0;
-        boolean correcto=false;
-        while(!correcto) {
-            System.out.println("Introduce titulo");
-            try {
-                titulo=entrada.nextLine();
-            }catch(Exception e) {
-                continue;
-            }
-            System.out.println("Introduce categoria");
-            try {
-                categoria=entrada.nextLine();
-            }catch(Exception e) {
-                continue;
-            }
-            boolean estadoAceptado=false;
-            while(!estadoAceptado) {
-            System.out.println("Introduce estado(Nuevo/Como nuevo/Bueno/Aceptable/Regular");
-            try {
-                estado=entrada.nextLine();
-                for(String e:estadosPosibles) {
-                    if(estado.toUpperCase().equals(e)) {
-                        estadoAceptado=true;
-                    }
-                }
-            }catch(Exception e) {
-                continue;
-            }
-            }
-            System.out.println("Introduce descripcion");
-            try {
-                descripcion=entrada.nextLine();
-            }catch(Exception e) {
-                continue;
-            }
-            System.out.println("Introduce precio (double)");
-            try {
-                precio=entrada.nextDouble();
-                correcto=true;
-            }catch(Exception e) {
-                continue;
-            }
-        }
-        return new Producto(titulo,categoria,estado,descripcion,precio,this.cp);
-    }
+		String estadosPosibles[]= {"NUEVO","COMO NUEVO","BUENO","ACEPTABLE","REGULAR"};
+		Scanner entrada=new Scanner(System.in);
+		String titulo="";
+		String categoria="";
+		String estado="";
+		String descripcion="";
+		double precio=0;
+		boolean correcto=false;
+		while(!correcto) {
+			System.out.println("Introduce titulo");
+			try {
+				titulo=entrada.nextLine();
+			}catch(Exception e) {
+				continue;
+			}
+			System.out.println("Introduce categoria");
+			try {
+				categoria=entrada.nextLine();
+			}catch(Exception e) {
+				continue;
+			}
+			boolean estadoAceptado=false;
+			while(!estadoAceptado) {
+			System.out.println("Introduce estado(Nuevo/Como nuevo/Bueno/Aceptable/Regular");
+			try {
+				estado=entrada.nextLine();
+				for(String e:estadosPosibles) {
+					if(estado.toUpperCase().equals(e)) {
+						estadoAceptado=true;
+					}
+				}
+			}catch(Exception e) {
+				continue;
+			}
+			}
+			System.out.println("Introduce descripcion");
+			try {
+				descripcion=entrada.nextLine();
+			}catch(Exception e) {
+				continue;
+			}
+			System.out.println("Introduce precio (double)");
+			try {
+				precio=entrada.nextDouble();
+				correcto=true;
+			}catch(Exception e) {
+				continue;
+			}
+		}
+		return new Producto(titulo,categoria,estado,descripcion,precio,this.cp);
+	}
 	
 	/**
 	 * Este método añade un objeto de clase Producto a un array general con todos
@@ -99,16 +99,22 @@ public class Cliente implements Serializable {
 		/**
 		 * Si el producto no se encuentra en la lista personal del cliente, se añade.
 		 */
-		if(!productosCliente.contains(producto)) {
+		if(this.productosCliente==null) {
 			producto.setCp(this.cp);
-			productosCliente.add(producto);
-			/**
-			 * Añade producto a la lista general de productos
-			 */
+			this.productosCliente.add(producto);
 			DatosPrograma.añadirProducto(producto);
-			
-		}else {System.out.println("Este producto ya se encuentra en su lista.");
-	}
+		}else {
+			if(!this.productosCliente.contains(producto)) {
+				producto.setCp(this.cp);
+				this.productosCliente.add(producto);
+				/**
+				 * Añade producto a la lista general de productos
+				 */
+				DatosPrograma.añadirProducto(producto);
+				
+			}else {System.out.println("Este producto ya se encuentra en su lista.");
+		}
+		}
 	}
 	
 	/**
@@ -117,12 +123,12 @@ public class Cliente implements Serializable {
 	 * 
 	 * @param producto objeto de clase Producto
 	 */
-	public static void retirarProducto(Producto producto) { 
+	public  void retirarProducto(Producto producto) { 
 		/**
 		 * Si el producto se encuentra en la lista personal del cliente, se retira.
 		 */
 		if(productosCliente.contains(producto)) {
-			productosCliente.remove(producto);
+			this.productosCliente.remove(producto);
 			/**
 			 * Retira producto de la lista general de productos
 			 */
@@ -147,6 +153,7 @@ public class Cliente implements Serializable {
 			if(nombre.equals(i.getTitulo()) && !i.isUrgente()) {
 				i.setUrgente(true);
 				System.out.println("Ha convertido "+i.getTitulo()+" en urgente con tarjeta "+this.credito);
+				i.estableceFechaUrgente();
 			}else {
 				System.out.println("Ha introducido un nombre incorrecto o su producto ya era urgente.");
 			}
@@ -202,21 +209,22 @@ public class Cliente implements Serializable {
      * @return lista de productos inicial ordenada mediante la semejanza del código postal
      */
 	public static ArrayList<Producto> ordenaCoPostal(String codigo, ArrayList<Producto> productos){
-        char caracter0 = codigo.charAt(0);  //Se separan los 3 primeros numeros del codigo postal
+        char caracter0 = codigo.charAt(0);
         char caracter1 = codigo.charAt(1);
         char caracter2 = codigo.charAt(2);
         char comparable0; 
         char comparable1; 
         char comparable2; 
-        ArrayList<Producto> muyProximo = new ArrayList<Producto>();  //3 listas para los 3 tipos de proximidades
+        ArrayList<Producto> muyProximo = new ArrayList<Producto>();
         ArrayList<Producto> proximo = new ArrayList<Producto>();
         ArrayList<Producto> indiferente = new ArrayList<Producto>();
+        ArrayList<Producto> listaFinal = new ArrayList<Producto>();
         
         for (Producto variable : productos){
             comparable0 = (variable.getCp()).charAt(0);
             comparable1 = (variable.getCp()).charAt(1);
             comparable2 = (variable.getCp()).charAt(2);
-            if (comparable0 == caracter0 && comparable1 == caracter1 && comparable2 == caracter2){  
+            if (comparable0 == caracter0 && comparable1 == caracter1 && comparable2 == caracter2){
                 muyProximo.add(variable);
             }
             else if (comparable0 == caracter0 && comparable1 == caracter1){
@@ -228,7 +236,7 @@ public class Cliente implements Serializable {
             }
             
             
-        }  //Se introducen el contenido de la lista "proximo e "indiferente en e arrayList MuyProximo
+        }
         for (Producto enLista:proximo){
             muyProximo.add(enLista);
         }
@@ -253,14 +261,8 @@ public class Cliente implements Serializable {
         ArrayList<Producto> parecidos = new ArrayList<Producto>();
         ArrayList<Producto> restantes = new ArrayList<Producto>();
         
-        for (Producto p: productos){  
-            /*Para evitar que un producto sea comprado por dos personas antes de que el dueño acepte la compra
-            se impide la entrada de dichos productos en la busqueda mediante este if*/
-            if (p.isVenta()){  
-                System.out.println("El producto " + p.getTitulo() + " se encuentra reservado en estos momentos");
-            }
-            else { //Los productos que no esten en espera entran aquí
-                if (p.isUrgente()){ //Los productos urgentes tienen prioridad
+        for (Producto p: productos){
+            if (p.isUrgente()){
                 urgentes.add(p);
             }
             else {
@@ -274,7 +276,7 @@ public class Cliente implements Serializable {
                 restantes.add(p);
                 }
             }
-            }
+            
         }
         urgentes = ordenaCoPostal(codigo, urgentes);
         iguales = ordenaCoPostal(codigo, iguales);
@@ -309,21 +311,25 @@ public class Cliente implements Serializable {
 	public void comprarProducto(String palabrasClave) {
 		Scanner entrada=new Scanner(System.in);
 		ArrayList<Producto> productosDisponibles = buscaOrdena(palabrasClave,DatosPrograma.productos,this.cp);
-		for(Producto p:productosDisponibles) {
-			System.out.println(p.getTitulo()+ "precio "+p.getPrecio()+"Estado"+p.getEstado());
-		}
-		System.out.println("Escribe el nombre del producto que quieres comprar: ");
-		String nombre=entrada.nextLine();
-		for(Producto p:productosDisponibles) {
-			if(nombre.equals(p.getTitulo())) {
-				System.out.println("Ha solicitado comprar: "+p.getTitulo()+"por valor "+p.getPrecio()+" con tarjeta "+this.getCredito());
-				/**
-				 * Pone el marcador del producto en vendido para ser aceptado por el vendedor mas tarde
-				 */
-				p.setVenta(true); 
-				p.setComprador(this.nombre, this.dni);
-			}else {
-				System.out.println("El nombre que ha introducido es incorrecto");
+		if(productosDisponibles.isEmpty()) {
+			System.out.println("No hay ningun producto disponible.");
+		}else {
+			for(Producto p:productosDisponibles) {
+				System.out.println(p.getTitulo()+ "precio "+p.getPrecio()+"Estado"+p.getEstado());
+			}
+			System.out.println("Escribe el nombre del producto que quieres comprar: ");
+			String nombre=entrada.nextLine();
+			for(Producto p:productosDisponibles) {
+				if(nombre.equals(p.getTitulo())) {
+					System.out.println("Ha solicitado comprar: "+p.getTitulo()+"por valor "+p.getPrecio()+" con tarjeta "+this.getCredito());
+					/**
+					 * Pone el marcador del producto en vendido para ser aceptado por el vendedor mas tarde
+					 */
+					p.setVenta(true); 
+					p.setComprador(this.nombre, this.dni);
+				}else {
+					System.out.println("El nombre que ha introducido es incorrecto");
+				}
 			}
 		}
 	}
@@ -399,7 +405,7 @@ public class Cliente implements Serializable {
 		this.cp = cp;
 		this.ciudad = ciudad;
 		this.credito = credito;
-		this.productosCliente =new ArrayList<>(); //Crea Arraylist vacio cada vez que se crea un cliente 
+		this.productosCliente =new ArrayList<Producto>(); //Crea Arraylist vacio cada vez que se crea un cliente 
 	}
 	
 	
