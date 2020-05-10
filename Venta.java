@@ -1,12 +1,21 @@
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+/**
+ * Esta clase permite la creacion de objetos tipo Venta, los cuales 
+ * guardan la informacion de una venta.
+ * 
+ * @author Javier Carrizosa Bermejo
+ * @author Hugo García Calvo
+ *
+ */
 public class Venta implements Serializable {
 		private LocalDate fechaPublicacion;    
 	    private String categoria;     
-	    private String estado;     //Nuevo, seminuevo, decente.....
+	    private String estado;     
 	    private String descripcion;   
-	    private String titulo;   //Resumen del producto con palabras clave
+	    private String titulo;   
 	    private double precio;       
 	    public String cp; 
 	    private LocalDateTime fechaVenta;
